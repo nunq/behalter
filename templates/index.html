@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>bookmarks</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'style.css') }}">
+    <script async src="{{ url_for('static', filename= 'script.js') }}"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body>
+    <div>
+      <details>
+        <summary>add new bookmark</summary>
+          <div id="add-dialog"> 
+          <div>
+          <label for="new-link">link: </label>
+          <input type="text" id="new-link" name="link" placeholder="source link" required>
+          </div>
+          <div>
+          <label for="new-note">note: </label>
+          <textarea rows="4" cols="50" form="create-new" id="new-note" name="note" placeholder="add a note"></textarea>
+          </div>
+          <div>
+          <label for="new-tags">tags: </label>
+          <input type="text" class="new-tags" name="new-tags" placeholder="tag">
+          <button onclick="add_tag()">add tag</button>
+            
+          </div>
+          <br>
+        <button onclick="send()">add bookmark</button>
+          </div>
+    </div>
+  </body>
+</html>
