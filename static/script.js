@@ -1,10 +1,12 @@
 function send() {
   // TODO validation
-  s = document.getElementById("new-link").value;
+  l = document.getElementById("new-link").value;
+  t = document.getElementById("new-title").value;
+  d = document.getElementById("new-description").value;
   n = document.getElementById("new-note").value;
-  t = document.getElementById("new-tags").value;
+  ta = document.getElementById("new-tags").value;
 
-  fetch("/api/add?source="+encodeURIComponent(s)+"&note="+encodeURIComponent(n)+"&tags="+encodeURIComponent(t))
+  fetch("/api/add?link="+encodeURIComponent(l)+"&note="+encodeURIComponent(n)+"&tags="+encodeURIComponent(ta)+"&description="+encodeURIComponent(d)+"&title="+encodeURIComponent(t))
     .then((response) => response.json())
     .then((data) => console.log(data));
 }
