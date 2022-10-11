@@ -7,22 +7,41 @@ import urllib.request
 from urllib.parse import unquote
 import opengraph_py3 as opengraph
 import re
+import atexit
+
+conn = sqlite3.connect("bm.db")
+conn.row_factory = sqlite3.Row
+cur = conn.cursor()
+
+def shutdown():
+    conn.commit()
+    conn.close()
+
+atexit.register(shutdown)
 
 app = Flask(__name__)
 
 @app.route("/")
 def index():
-    conn = sqlite3.connect("bm.db")
-    conn.row_factory = sqlite3.Row
-    bm = conn.execute("SELECT * FROM bookmarks").fetchall()
-    conn.close()
+    bm = conn.execute("SELECT * FROM bookmarks ORDER BY id DESC").fetchall()
     return render_template("index.html", bookmarks=bm)
 
 @app.route("/api/add")
 def add_bookmark():
-    source = request.args.get("link")
+    title = request.args.get("title")
+    link_enc = request.args.get("link")
+    link = unquote(link_enc)
+    description = request.args.get("description")
     note = request.args.get("note")
     tags = request.args.get("tags")
+    domain = re.search(r'://(.*?)/', link).group(1)
+    # TODO append / in frontend js
+
+
+    cur.execute("INSERT INTO bookmarks (title, currentlink, origlink, archivelink, domain, description, note, tags) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            (title, link, link, "ARCHIVE TODO", domain, description, note, tags)
+            )
+    conn.commit()
 
     # TODO full page text (selenium or library?) ?
 
