@@ -14,7 +14,15 @@
           <div id="add-dialog"> 
           <div>
           <label for="new-link">link: </label>
-          <input type="text" id="new-link" name="link" placeholder="source link" required>
+          <input type="text" id="new-link" name="link" placeholder="source link">
+          </div>
+          <div>
+          <label for="new-description">description: </label>
+          <input type="text" id="new-description" name="description" placeholder="description">
+          </div>
+          <div>
+          <label for="new-title">title: </label>
+          <input type="text" id="new-title" name="title" placeholder="title">
           </div>
           <div>
           <label for="new-note">note: </label>
@@ -22,13 +30,33 @@
           </div>
           <div>
           <label for="new-tags">tags: </label>
-          <input type="text" class="new-tags" name="new-tags" placeholder="tag">
-          <button onclick="add_tag()">add tag</button>
+          <input type="text" id="new-tags" name="new-tags" placeholder="tags separated by spaces">
             
           </div>
           <br>
         <button onclick="send()">add bookmark</button>
           </div>
     </div>
+    <!--- divider --->
+    <br><br><br>
+    <div id="bm-container">
+      {% for bm in bookmarks %}
+      <div class="item">
+        <a class="link" href='{{ bm["currentlink"] }}'>{{ bm["title"] }}</a>
+        <div class="note">
+          <p>{{ bm["note"] }}</p>
+        </div>
+        <div class="tags">
+          {% for tag in bm["tags"].split(" ") %}
+          <span>{{ tag }}</span>
+          {% endfor %}
+        </div>
+        <div class="meta">
+          <span class="domainfilter" onclick="domainfilter()">{{ bm["domain"] }}</span>
+          <span>added: {{ bm["created"] }}</span>
+          <span>id: {{ bm["id"] }}</span>
+        </div>
+      </div>
+      {% endfor %}
   </body>
 </html>
