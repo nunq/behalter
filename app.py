@@ -100,3 +100,6 @@ def delete_bookmark():
 #
 #
 # TODO on exit db commit and db close
+
+if __name__ == "__main__":
+    app.run(threaded=False, processes=1)
