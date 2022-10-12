@@ -5,11 +5,12 @@ import json
 import sqlite3
 import urllib.request
 from urllib.parse import unquote
-import opengraph_py3 as opengraph
 import re
 import atexit
+from bs4 import BeautifulSoup
+from datetime import datetime
 
-conn = sqlite3.connect("bm.db")
+conn = sqlite3.connect("bm.db", check_same_thread=False)
 conn.row_factory = sqlite3.Row
 cur = conn.cursor()
 
@@ -34,7 +35,10 @@ def add_bookmark():
     description = request.args.get("description")
     note = request.args.get("note")
     tags = request.args.get("tags")
-    domain = re.search(r'://(.*?)/', link).group(1)
+    try:
+        domain = re.search(r'://(.*?)/', link).group(1)
+    except:
+        domain = ""
     # TODO append / in frontend js
 
 
@@ -65,19 +69,22 @@ def linkinfo():
             )
 
     res = urllib.request.urlopen(req)
-    html = res.read().decode("utf-8")
+    #html = res.read().decode("utf-8")
 
-# TODO do opengraph without this library
-    data = opengraph.OpenGraph(url=link)
-    title = data["title"]
-    description = data["description"]
+    soup = BeautifulSoup(res, "html.parser",
+                         from_encoding=res.info().get_param("charset"))
 
-    if title == "" or description == "":
-        try:
-            title = re.search(r'<title>(.*?)</title>', html).group(1)
-            description = re.search(r'<meta name="description">(.*?)</meta>', html).group(1)
-        except AttributeError:
-            title = description = ""
+    title = soup.title.string
+
+    description = ""
+    if soup.find(name="meta", attrs={"name":"description"}) != None:
+        description = soup.find(name="meta", attrs={"name":"description"}).get("content")
+
+    if soup.find(name="meta", attrs={"name":"og:description"}) != None and description == "":
+        description = soup.find(name="meta", attrs={"name":"og:description"}).get("content")
+
+    if soup.find(name="meta", attrs={"name":"twitter:description"}) != None and description == "":
+        description = soup.find(name="meta", attrs={"name":"twitter:description"}).get("content")
 
     return json.dumps({"result": "success", "title": title, "description": description})
 
