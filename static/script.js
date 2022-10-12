@@ -4,7 +4,6 @@ function send() {
   d = document.getElementById("new-description").value;
   n = document.getElementById("new-note").value;
   ta = document.getElementById("new-tags").value;
-
   l.reportValidity();
   t.reportValidity();
 
@@ -16,7 +15,6 @@ function send() {
 function getlinkinfo() {
   l = document.getElementById("new-link");
   t = document.getElementById("new-title");
-
   l.reportValidity();
 
   fetch("/api/linkinfo?link="+encodeURIComponent(l.value))
