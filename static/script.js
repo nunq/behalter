@@ -1,20 +1,25 @@
 function send() {
-  // TODO validation
-  l = document.getElementById("new-link").value;
-  t = document.getElementById("new-title").value;
+  l = document.getElementById("new-link");
+  t = document.getElementById("new-title");
   d = document.getElementById("new-description").value;
   n = document.getElementById("new-note").value;
   ta = document.getElementById("new-tags").value;
 
-  fetch("/api/add?link="+encodeURIComponent(l)+"&note="+encodeURIComponent(n)+"&tags="+encodeURIComponent(ta)+"&description="+encodeURIComponent(d)+"&title="+encodeURIComponent(t))
+  l.reportValidity();
+  t.reportValidity();
+
+  fetch("/api/add?link="+encodeURIComponent(l.value)+"&note="+encodeURIComponent(n)+"&tags="+encodeURIComponent(ta)+"&description="+encodeURIComponent(d)+"&title="+encodeURIComponent(t.value))
     .then((response) => response.json())
     .then((data) => console.log(data));
 }
 
-function get_link_info() {
-  l = document.getElementById("new-link").value;
+function getlinkinfo() {
+  l = document.getElementById("new-link");
+  t = document.getElementById("new-title");
 
-  fetch("/api/linkinfo?link="+encodeURIComponent(l))
+  l.reportValidity();
+
+  fetch("/api/linkinfo?link="+encodeURIComponent(l.value))
     .then((response) => response.json())
-    .then((data) => console.log(data));
+    .then((data) => t.value = data["title"]);
 }
