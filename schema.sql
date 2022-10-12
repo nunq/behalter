@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS bookmarks;
 
 CREATE TABLE bookmarks (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created INTEGER NOT NULL DEFAULT (unixepoch()),
     title TEXT NOT NULL,
     currentlink TEXT NOT NULL,
     origlink TEXT NOT NULL,
