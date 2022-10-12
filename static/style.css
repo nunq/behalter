@@ -66,10 +66,16 @@ h1 {
   margin-left: 3px;
   padding: 3px;
 }
-.domainfilter:hover {
+.edit:hover, .delete:hover {
   cursor: pointer;
 }
-.domainfilter {
+.delete:hover {
+  color: #fc1111;
+}
+.edit:hover {
+  color: #006ddb;
+}
+.edit, .delete {
   text-decoration: underline;
 }
 
