@@ -52,9 +52,10 @@
           {% endfor %}
         </div>
         <div class="meta">
-          <span class="domainfilter" onclick="domainfilter()">{{ bm["domain"] }}</span>
-          <span>added: {{ bm["created"] }}</span>
-          <span>id: {{ bm["id"] }}</span>
+          <span class="edit" onclick="edit()">edit</span>
+          <span class="delete" onclick="delete()">delete</span>
+          <span>added: {{ bm["created"] | unix_to_date }}</span>
+          <span>id: {{ "%04d" % bm["id"] }}</span>
         </div>
       </div>
       {% endfor %}

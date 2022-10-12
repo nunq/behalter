@@ -22,6 +22,14 @@ atexit.register(shutdown)
 
 app = Flask(__name__)
 
+
+@app.template_filter()
+def unix_to_date(timestamp):
+    return datetime.utcfromtimestamp(timestamp).strftime("%d-%m-%Y")
+
+# -----------------------------------
+# routes
+
 @app.route("/")
 def index():
     bm = conn.execute("SELECT * FROM bookmarks ORDER BY id DESC").fetchall()
