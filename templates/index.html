@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>bookmarks</title>
+    <title>behalter</title>
     <link rel="stylesheet" href="{{ url_for('static', filename= 'style.css') }}">
     <script async src="{{ url_for('static', filename= 'script.js') }}"></script>
     <meta charset="utf-8">
@@ -22,8 +22,12 @@
         <input type="text" id="new-title" name="title" placeholder="title" required>
         </div>
         <div>
+        <label for="new-detail">detail: </label>
+        <input type="text" id="new-detail" name="detail" placeholder="detailed text">
+        </div>
+        <div>
         <label for="new-note">note: </label>
-        <textarea rows="4" form="create-new" id="new-note" name="note" placeholder="add a note"></textarea>
+        <textarea rows="3" form="create-new" id="new-note" name="note" placeholder="add a note"></textarea>
         </div>
         <div>
         <label for="new-tags">tags: </label>
@@ -38,9 +42,7 @@
       {% for bm in bookmarks %}
       <div class="item">
         <a class="link" href='{{ bm["currentlink"] }}'>{{ bm["title"] }}</a>
-        <div class="note">
-          <p>{{ bm["note"] }}</p>
-        </div>
+        <p class="note">{{ bm["note"] }}</p>
         <div class="tags">
           {% for tag in bm["tags"].split(" ") %}
           <span>{{ tag }}</span>
