@@ -18,13 +18,17 @@ h1 {
 }
 #add-dialog {
   background: antiquewhite;
-  padding: 10px;
+  padding: 0.6em;
   border-radius: 10px;
   border: 2px solid black;
+}
+#add-dialog > summary > form {
+  display: inline;
 }
 #add-table {
   display: table;
   width: 100%;
+  margin-top: 8px;
 }
 #add-table > div {
   display: table-row;
@@ -92,6 +96,11 @@ details:hover {
 .detail {
   font-size: 0.8em;
   color: #4d4d4d;
+}
+#search {
+  padding-left: 0.3em;
+  margin-left: 0.3em;
+  width: calc(100% - 13em);
 }
 @media only screen and (min-width: 800px) {
   #add-dialog {
