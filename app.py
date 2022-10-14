@@ -40,7 +40,7 @@ def add_bookmark():
     title = request.args.get("title")
     link_enc = request.args.get("link")
     link = unquote(link_enc)
-    description = request.args.get("description")
+    detail = request.args.get("detail")
     note = request.args.get("note")
     tags = request.args.get("tags")
     try:
@@ -50,15 +50,12 @@ def add_bookmark():
     # TODO append / in frontend js
 
 
-    cur.execute("INSERT INTO bookmarks (title, currentlink, origlink, archivelink, domain, description, note, tags) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-            (title, link, link, "ARCHIVE TODO", domain, description, note, tags)
+    cur.execute("INSERT INTO bookmarks (title, currentlink, origlink, archivelink, domain, detail, note, tags) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            (title, link, link, "ARCHIVE TODO", domain, detail, note, tags)
             )
     conn.commit()
 
     # TODO full page text (selenium or library?) ?
-
-    # insert into db
-
 
     return json.dumps({"result": "success"})
 
@@ -84,17 +81,17 @@ def linkinfo():
 
     title = soup.title.string
 
-    description = ""
-    if soup.find(name="meta", attrs={"name":"description"}) != None:
-        description = soup.find(name="meta", attrs={"name":"description"}).get("content")
+    detail = ""
+    if soup.find(name="meta", attrs={"name":"detail"}) != None:
+        detail = soup.find(name="meta", attrs={"name":"detail"}).get("content")
 
-    if soup.find(name="meta", attrs={"name":"og:description"}) != None and description == "":
-        description = soup.find(name="meta", attrs={"name":"og:description"}).get("content")
+    if soup.find(name="meta", attrs={"name":"og:description"}) != None and detail == "":
+        detail = soup.find(name="meta", attrs={"name":"og:description"}).get("content")
 
-    if soup.find(name="meta", attrs={"name":"twitter:description"}) != None and description == "":
-        description = soup.find(name="meta", attrs={"name":"twitter:description"}).get("content")
+    if soup.find(name="meta", attrs={"name":"twitter:description"}) != None and detail == "":
+        detail = soup.find(name="meta", attrs={"name":"twitter:description"}).get("content")
 
-    return json.dumps({"result": "success", "title": title, "description": description})
+    return json.dumps({"result": "success", "title": title, "detail": detail})
 
 
 @app.route("/api/edit")
