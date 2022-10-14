@@ -1,6 +1,6 @@
 body {
   margin-bottom: 4rem;
-  background: #d19f62;
+  background: #d1a773;
 }
 h1 {
   margin-bottom: 0;
@@ -40,7 +40,7 @@ h1 {
 }
 .item {
   box-shadow: 0 2px 1px 0 rgba(0, 0, 0, 0.2), 0 2px 10px 0 rgba(0, 0, 0, 0.19);
-  background: #F7F794;
+  background: #FAFA8FEB;
   border-radius: 2px;
   display: flex;
   flex-flow: column;
@@ -88,6 +88,10 @@ textarea {
 }
 details:hover {
   cursor: pointer;
+}
+.detail {
+  font-size: 0.8em;
+  color: #4d4d4d;
 }
 @media only screen and (min-width: 800px) {
   #add-dialog {

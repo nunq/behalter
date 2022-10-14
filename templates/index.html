@@ -42,6 +42,7 @@
       {% for bm in bookmarks %}
       <div class="item">
         <a class="link" href='{{ bm["currentlink"] }}'>{{ bm["title"] }}</a>
+        <span class="detail">{{ bm["detail"] }}</span>
         <p class="note">{{ bm["note"] }}</p>
         <div class="tags">
           {% for tag in bm["tags"].split(" ") %}
