@@ -4,7 +4,7 @@ function checkerror(json) {
   }
 }
 
-function send() {
+function add() {
   l = document.getElementById("new-link");
   t = document.getElementById("new-title");
   d = document.getElementById("new-detail").value;
@@ -17,14 +17,14 @@ function send() {
     return
   }
 
-  fetch("/api/add?link="+encodeURIComponent(l.value)+"&note="+encodeURIComponent(n)+"&tags="+encodeURIComponent(ta)+"&detail="+encodeURIComponent(d)+"&title="+encodeURIComponent(t.value))
+  fetch("/api/bm/add?link="+encodeURIComponent(l.value)+"&note="+encodeURIComponent(n)+"&tags="+encodeURIComponent(ta)+"&detail="+encodeURIComponent(d)+"&title="+encodeURIComponent(t.value))
     .then((response) => response.json())
     .then((data) => checkerror(data));
 }
 
 function deletebm(bookmark) {
   if(confirm("really delete "+bookmark.dataset.title+" ?")) {
-    fetch("/api/delete?id="+bookmark.dataset.id)
+    fetch("/api/bm/delete?id="+bookmark.dataset.id)
       .then((response) => response.json())
       .then((data) => checkerror(data));
   }
@@ -62,7 +62,7 @@ function getlinkinfo() {
   document.getElementById("new-title").placeholder = "fetching title...";
   document.getElementById("new-detail").placeholder = "fetching detail...";
 
-  fetch("/api/linkinfo?link="+encodeURIComponent(l.value))
+  fetch("/api/bm/linkinfo?link="+encodeURIComponent(l.value))
     .then((response) => response.json())
     .then((data) => setlinkinfo(data));
 }
