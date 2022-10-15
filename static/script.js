@@ -47,8 +47,7 @@ function deletebm(bookmark) {
 }
 
 function filterbytag(tag) {
-  console.log(tag.innerHTML);
-  // TODO send to /search?tag= ...
+  window.location.href = "/search?tag="+encodeURIComponent(tag.innerHTML);
 }
 
 function resetfields() {

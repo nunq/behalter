@@ -116,25 +116,15 @@ def delete_bookmark():
 def search_bookmarks():
     query = request.args.get("q")
     tag = request.args.get("tag")
-    site = request.args.get("site")
 
-    # NOTE FIXME this is unsafe and does not prevent sql injections
-    # originally wanted to use jinjasql but it breaks with recent
-    # jinja versions. manually listing all 8 or so cases is not pretty
-
-    sql = "SELECT * FROM bookmarks WHERE NOT deleted "
-
-    if tag != "" and tag != None:
-        sql += "AND tags LIKE '%"+str(tag)+"%' "
-    if site != "" and site != None:
-        sql += "AND domain LIKE '%"+str(site)+"%' "
-    if query != "" and query != None:
-        sql += "AND (title LIKE '%"+str(query)+"%' OR origlink LIKE '%"+str(query)+"%' OR detail LIKE '%"+str(query)+"%' or note LIKE '%"+str(query)+"%')"
-
-    sql += "ORDER BY id DESC"
-
-    search = cur.execute(sql).fetchall()
-    return render_template("index.html", bookmarks=search)
+    if (tag != "" and tag != None) and (query == "" or query == None):
+        tagsearch = cur.execute("SELECT * FROM bookmarks WHERE NOT deleted AND tags LIKE (?) ORDER BY id DESC", ("%"+tag+"%",)).fetchall()
+        return render_template("index.html", bookmarks=tagsearch)
+    elif (query != "" and query) != None and (tag == "" or tag == None):
+        qsearch = cur.execute("SELECT * FROM bookmarks WHERE NOT deleted AND (title LIKE (?) OR origlink LIKE (?) OR detail LIKE (?) or note LIKE (?)) ORDER BY id DESC", ("%"+query+"%", "%"+query+"%", "%"+query+"%", "%"+query+"%")).fetchall()
+        return render_template("index.html", bookmarks=qsearch)
+    else:
+        return render_template("index.html", bookmarks="")
 
 @app.route("/api/tags/get")
 def list_tags():
