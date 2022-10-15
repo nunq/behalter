@@ -1,3 +1,11 @@
+"use strict";
+
+const l = document.getElementById("new-link");
+const t = document.getElementById("new-title");
+const d = document.getElementById("new-detail");
+const n = document.getElementById("new-note");
+const ta = document.getElementById("new-tags");
+
 function checkerror(json) {
   if(json["result"] == "error") {
     alert(json["res-text"]);
@@ -8,27 +16,24 @@ function afteradd(json) {
   if(json["result"] == "error") {
     checkerror(json)
   } else {
-    document.getElementById("new-link").value = "";
-    document.getElementById("new-title").value = "";
-    document.getElementById("new-detail").value = "";
-    document.getElementById("new-note").value = "";
-    document.getElementById("new-tags").value = "";
+    l.value = "";
+    t.value = "";
+    d.value = "";
+    n.value = "";
+    ta.value = "";
+    t.placeholder = "title";
+    d.placeholder = "detail";
   }
+}
 
 function add() {
-  l = document.getElementById("new-link");
-  t = document.getElementById("new-title");
-  d = document.getElementById("new-detail").value;
-  n = document.getElementById("new-note").value;
-  ta = document.getElementById("new-tags").value;
-
   if(l.value == "" || t.value == "") {
     l.reportValidity();
     t.reportValidity();
     return
   }
 
-  fetch("/api/bm/add?link="+encodeURIComponent(l.value)+"&note="+encodeURIComponent(n)+"&tags="+encodeURIComponent(ta)+"&detail="+encodeURIComponent(d)+"&title="+encodeURIComponent(t.value))
+  fetch("/api/bm/add?link="+encodeURIComponent(l.value)+"&note="+encodeURIComponent(n.value)+"&tags="+encodeURIComponent(ta.value)+"&detail="+encodeURIComponent(d.value)+"&title="+encodeURIComponent(t.value))
     .then((response) => response.json())
     .then((data) => afteradd(data));
 }
@@ -47,25 +52,23 @@ function filterbytag(tag) {
 }
 
 function resetfields() {
-  document.getElementById("new-title").placeholder = "title";
-  document.getElementById("new-detail").placeholder = "detail";
-  document.getElementById("new-title").value = "";
-  document.getElementById("new-detail").value = "";
+  t.placeholder = "title";
+  d.placeholder = "detail";
+  t.value = "";
+  d.value = "";
 }
 
 function setlinkinfo(data) {
-  document.getElementById("new-title").value = data["title"];
+  t.value = data["title"];
   if(data["detail"] == "") {
-    document.getElementById("new-detail").value = data["detail"];
-    document.getElementById("new-detail").placeholder = "couldn't fetch detail";
+    d.value = data["detail"];
+    d.placeholder = "couldn't fetch detail";
   } else {
-    document.getElementById("new-detail").value = data["detail"];
+    d.value = data["detail"];
   }
 }
 
 function getlinkinfo() {
-  l = document.getElementById("new-link");
-
   if(l.value == "") {
     l.reportValidity();
     return
@@ -75,8 +78,8 @@ function getlinkinfo() {
     return
   }
 
-  document.getElementById("new-title").placeholder = "fetching title...";
-  document.getElementById("new-detail").placeholder = "fetching detail...";
+  t.placeholder = "fetching title...";
+  d.placeholder = "fetching detail...";
 
   fetch("/api/bm/linkinfo?link="+encodeURIComponent(l.value))
     .then((response) => response.json())
