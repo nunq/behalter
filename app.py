@@ -97,7 +97,6 @@ def linkinfo():
 def edit_bookmark():
     # anhand der id das ding in der datenbank updaten, alle felder die aus dem frontend kommen
 
-
     source = request.args.get("link")
 
 
@@ -113,13 +112,29 @@ def delete_bookmark():
 
     return json.dumps({"result": "success"})
 
-@app.route("/api/bm/search")
+@app.route("/search")
 def search_bookmarks():
     query = request.args.get("q")
-    tags = request.args.get("tags")
+    tag = request.args.get("tag")
     site = request.args.get("site")
-    # SELECT * FROM TABLE WHERE column LIKE '%cats%'
-    return ""
+
+    # NOTE FIXME this is unsafe and does not prevent sql injections
+    # originally wanted to use jinjasql but it breaks with recent
+    # jinja versions. manually listing all 8 or so cases is not pretty
+
+    sql = "SELECT * FROM bookmarks WHERE NOT deleted "
+
+    if tag != "" and tag != None:
+        sql += "AND tags LIKE '%"+str(tag)+"%' "
+    if site != "" and site != None:
+        sql += "AND domain LIKE '%"+str(site)+"%' "
+    if query != "" and query != None:
+        sql += "AND (title LIKE '%"+str(query)+"%' OR origlink LIKE '%"+str(query)+"%' OR detail LIKE '%"+str(query)+"%' or note LIKE '%"+str(query)+"%')"
+
+    sql += "ORDER BY id DESC"
+
+    search = cur.execute(sql).fetchall()
+    return render_template("index.html", bookmarks=search)
 
 @app.route("/api/tags/get")
 def list_tags():
