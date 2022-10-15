@@ -1,3 +1,9 @@
+function checkerror(json) {
+  if(json["result"] == "error") {
+    alert(json["res-text"]);
+  }
+}
+
 function send() {
   l = document.getElementById("new-link");
   t = document.getElementById("new-title");
@@ -13,7 +19,20 @@ function send() {
 
   fetch("/api/add?link="+encodeURIComponent(l.value)+"&note="+encodeURIComponent(n)+"&tags="+encodeURIComponent(ta)+"&detail="+encodeURIComponent(d)+"&title="+encodeURIComponent(t.value))
     .then((response) => response.json())
-    .then((data) => console.log(data));
+    .then((data) => checkerror(data));
+}
+
+function deletebm(bookmark) {
+  if(confirm("really delete "+bookmark.dataset.title+" ?")) {
+    fetch("/api/delete?id="+bookmark.dataset.id)
+      .then((response) => response.json())
+      .then((data) => checkerror(data));
+  }
+}
+
+function filterbytag(tag) {
+  console.log(tag.innerHTML);
+  // TODO send to /search?tag= ...
 }
 
 function resetfields() {
