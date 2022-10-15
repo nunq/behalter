@@ -4,7 +4,6 @@ from flask import Flask, render_template, request
 import json
 import sqlite3
 import urllib.request
-from urllib.parse import unquote
 import re
 import atexit
 from bs4 import BeautifulSoup
@@ -35,18 +34,17 @@ def index():
     bm = conn.execute("SELECT * FROM bookmarks WHERE NOT deleted ORDER BY id DESC").fetchall()
     return render_template("index.html", bookmarks=bm)
 
-@app.route("/api/add")
+@app.route("/api/bm/add")
 def add_bookmark():
     title = request.args.get("title")
-    link_enc = request.args.get("link")
-    link = unquote(link_enc)
+    link = request.args.get("link")
     detail = request.args.get("detail")
     note = request.args.get("note")
     tags = request.args.get("tags")
     try:
         domain = re.search(r'://(.*?)/', link).group(1)
     except:
-        domain = ""
+        domain = re.search(r'://(.*?)$', link).group(1)
     # TODO append / in frontend js
 
     try:
@@ -63,10 +61,9 @@ def add_bookmark():
     return json.dumps({"result": "success"})
 
 
-@app.route("/api/linkinfo")
+@app.route("/api/bm/linkinfo")
 def linkinfo():
-    link_enc = request.args.get("link")
-    link = unquote(link_enc)
+    link = request.args.get("link")
 
     req = urllib.request.Request(
             link,
@@ -82,8 +79,8 @@ def linkinfo():
     title = soup.title.string
 
     detail = ""
-    if soup.find(name="meta", attrs={"name":"detail"}) != None:
-        detail = soup.find(name="meta", attrs={"name":"detail"}).get("content")
+    if soup.find(name="meta", attrs={"name":"description"}) != None:
+        detail = soup.find(name="meta", attrs={"name":"description"}).get("content")
 
     if soup.find(name="meta", attrs={"name":"og:description"}) != None and detail == "":
         detail = soup.find(name="meta", attrs={"name":"og:description"}).get("content")
@@ -94,7 +91,7 @@ def linkinfo():
     return json.dumps({"result": "success", "title": title, "detail": detail})
 
 
-@app.route("/api/edit")
+@app.route("/api/bm/edit")
 def edit_bookmark():
     # anhand der id das ding in der datenbank updaten, alle felder die aus dem frontend kommen
 
@@ -102,7 +99,7 @@ def edit_bookmark():
     source = request.args.get("link")
 
 
-@app.route("/api/delete")
+@app.route("/api/bm/delete")
 def delete_bookmark():
     b_id = request.args.get("id")
 
