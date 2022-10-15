@@ -2,10 +2,11 @@ body {
   margin-bottom: 4rem;
   background: #d1a773;
 }
-h1 {
+h1, h1 > a, h1 > a:visited {
   margin-bottom: 0;
   color: #261e1e;
   font-family: serif;
+  text-decoration: none;
 }
 #wrapper {
   display: grid;
