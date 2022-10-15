@@ -31,7 +31,7 @@ def unix_to_date(timestamp):
 
 @app.route("/")
 def index():
-    bm = conn.execute("SELECT * FROM bookmarks WHERE NOT deleted ORDER BY id DESC").fetchall()
+    bm = cur.execute("SELECT * FROM bookmarks WHERE NOT deleted ORDER BY id DESC").fetchall()
     return render_template("index.html", bookmarks=bm)
 
 @app.route("/api/bm/add")
@@ -106,12 +106,34 @@ def delete_bookmark():
     b_id = request.args.get("id")
 
     try:
-        cur.execute("UPDATE bookmarks SET deleted = TRUE WHERE id = (?)", (b_id) )
+        cur.execute("UPDATE bookmarks SET deleted = TRUE WHERE id = (?)", (b_id,))
         conn.commit()
     except:
         return json.dumps({"result": "error", "res-text": "database mark as deleted failed"})
 
     return json.dumps({"result": "success"})
+
+@app.route("/api/bm/search")
+def search_bookmarks():
+    query = request.args.get("q")
+    tags = request.args.get("tags")
+    site = request.args.get("site")
+    # SELECT * FROM TABLE WHERE column LIKE '%cats%'
+    return ""
+
+@app.route("/api/tags/get")
+def list_tags():
+    tagrows = cur.execute("SELECT name FROM tags ORDER BY usage DESC").fetchall()
+    ret = list()
+    for row in tagrows:
+        ret.append(row[0])
+
+    return json.dumps(ret)
+
+@app.route("/api/tags/rename")
+def rename_tag():
+    # TODO
+    return ""
 
 if __name__ == "__main__":
     app.run()
