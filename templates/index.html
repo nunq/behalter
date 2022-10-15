@@ -45,9 +45,11 @@
         <span class="detail">{{ bm["detail"] }}</span>
         <p class="note">{{ bm["note"] }}</p>
         <div class="tags">
-          {% for tag in bm["tags"].split(" ") %}
-          <span>{{ tag }}</span>
-          {% endfor %}
+          {% if bm["tags"] | length %}
+            {% for tag in bm["tags"].split(" ") %}
+            <span>{{ tag }}</span>
+            {% endfor %}
+          {% endif %}
         </div>
         <div class="meta">
           <span class="edit" onclick="edit()">edit</span>
