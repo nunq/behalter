@@ -44,7 +44,12 @@ function resetfields() {
 
 function setlinkinfo(data) {
   document.getElementById("new-title").value = data["title"];
-  document.getElementById("new-detail").value = data["detail"];
+  if(data["detail"] == "") {
+    document.getElementById("new-detail").value = data["detail"];
+    document.getElementById("new-detail").placeholder = "couldn't fetch detail";
+  } else {
+    document.getElementById("new-detail").value = data["detail"];
+  }
 }
 
 function getlinkinfo() {
