@@ -45,21 +45,23 @@ def add_bookmark():
         domain = re.search(r'://(.*?)/', link).group(1)
     except:
         domain = re.search(r'://(.*?)$', link).group(1)
-    # TODO append / in frontend js
 
     try:
         cur.execute("INSERT INTO bookmarks (title, currentlink, origlink, archivelink, domain, detail, note, tags) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                (title, link, link, "ARCHIVE TODO", domain, detail, note, tags)
-                )
+                (title, link, link, "ARCHIVE TODO", domain, detail, note, tags))
         conn.commit()
     except:
         return json.dumps({"result": "error", "res-text": "database insert failed"})
 
-
-    # TODO full page text (selenium or library?) ?
+    for tag in tags.split(" "):
+        try:
+            cur.execute("INSERT INTO tags (name, usage) VALUES (?, ?)", (tag, 1))
+            conn.commit()
+        except sqlite3.IntegrityError:
+            cur.execute("UPDATE tags SET usage = usage+1 WHERE name = (?)", (tag,))
+            conn.commit()
 
     return json.dumps({"result": "success"})
-
 
 @app.route("/api/bm/linkinfo")
 def linkinfo():
