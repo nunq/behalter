@@ -16,6 +16,13 @@ function send() {
     .then((data) => console.log(data));
 }
 
+function resetfields() {
+  document.getElementById("new-title").placeholder = "title";
+  document.getElementById("new-detail").placeholder = "detail";
+  document.getElementById("new-title").value = "";
+  document.getElementById("new-detail").value = "";
+}
+
 function setlinkinfo(data) {
   document.getElementById("new-title").value = data["title"];
   document.getElementById("new-detail").value = data["detail"];
@@ -26,6 +33,10 @@ function getlinkinfo() {
 
   if(l.value == "") {
     l.reportValidity();
+    return
+  }
+
+  if(! /^http/.test(l.value)) {
     return
   }
 
