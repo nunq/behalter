@@ -32,7 +32,7 @@ def unix_to_date(timestamp):
 
 @app.route("/")
 def index():
-    bm = conn.execute("SELECT * FROM bookmarks ORDER BY id DESC").fetchall()
+    bm = conn.execute("SELECT * FROM bookmarks WHERE NOT deleted ORDER BY id DESC").fetchall()
     return render_template("index.html", bookmarks=bm)
 
 @app.route("/api/add")
@@ -49,11 +49,14 @@ def add_bookmark():
         domain = ""
     # TODO append / in frontend js
 
+    try:
+        cur.execute("INSERT INTO bookmarks (title, currentlink, origlink, archivelink, domain, detail, note, tags) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                (title, link, link, "ARCHIVE TODO", domain, detail, note, tags)
+                )
+        conn.commit()
+    except:
+        return json.dumps({"result": "error", "res-text": "database insert failed"})
 
-    cur.execute("INSERT INTO bookmarks (title, currentlink, origlink, archivelink, domain, detail, note, tags) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-            (title, link, link, "ARCHIVE TODO", domain, detail, note, tags)
-            )
-    conn.commit()
 
     # TODO full page text (selenium or library?) ?
 
@@ -74,11 +77,8 @@ def linkinfo():
             )
 
     res = urllib.request.urlopen(req)
-    #html = res.read().decode("utf-8")
-
     soup = BeautifulSoup(res, "html.parser",
                          from_encoding=res.info().get_param("charset"))
-
     title = soup.title.string
 
     detail = ""
@@ -100,18 +100,19 @@ def edit_bookmark():
 
 
     source = request.args.get("link")
+
+
 @app.route("/api/delete")
 def delete_bookmark():
-    # TODO confirm dialog in frontend?
-    id = request.args.get("id")
+    b_id = request.args.get("id")
 
-    # dont delete in database but move to deleted table
+    try:
+        cur.execute("UPDATE bookmarks SET deleted = TRUE WHERE id = (?)", (b_id) )
+        conn.commit()
+    except:
+        return json.dumps({"result": "error", "res-text": "database mark as deleted failed"})
 
-
-# TODO return paginated feed
-#
-#
-# TODO on exit db commit and db close
+    return json.dumps({"result": "success"})
 
 if __name__ == "__main__":
-    app.run(threaded=False, processes=1)
+    app.run()
