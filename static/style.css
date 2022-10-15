@@ -78,7 +78,7 @@ textarea {
   margin-left: 3px;
   padding: 3px;
 }
-.edit:hover, .delete:hover {
+.edit:hover, .delete:hover, details:hover, .tags > span:hover {
   cursor: pointer;
 }
 .delete:hover {
@@ -89,9 +89,6 @@ textarea {
 }
 .edit, .delete {
   text-decoration: underline;
-}
-details:hover {
-  cursor: pointer;
 }
 .detail {
   font-size: 0.8em;
