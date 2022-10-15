@@ -11,7 +11,7 @@
     <h1>behalter</h1>
     <br>
     <details id="add-dialog">
-      <summary>add new or search <form action="search"><input type="text" id="search" name="q" placeholder="query" required></form></summary>
+      <summary>add new or search <form action="search"><input type="text" id="search" name="q" placeholder="query" autofocus required></form></summary>
         <div id="add-table">
         <div>
         <label for="new-link">link: </label>
@@ -47,13 +47,13 @@
         <div class="tags">
           {% if bm["tags"] | length %}
             {% for tag in bm["tags"].split(" ") %}
-            <span>{{ tag }}</span>
+            <span onclick="filterbytag(this)">{{ tag }}</span>
             {% endfor %}
           {% endif %}
         </div>
         <div class="meta">
           <span class="edit" onclick="edit()">edit</span>
-          <span class="delete" onclick="delete()">delete</span>
+          <span class="delete" data-title='{{ bm["title"] }}' data-id='{{ bm["id"] }}' onclick="deletebm(this)">delete</span>
           <span>added: {{ bm["created"] | unix_to_date }}</span>
           <span>id: {{ "%04d" % bm["id"] }}</span>
         </div>
