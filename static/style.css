@@ -105,6 +105,7 @@ textarea {
   border: 1px dashed silver;
   background: lightyellow;
   padding: 6px;
+  margin: 0 0 8px 0;
 }
 #search {
   padding-left: 0.3em;
