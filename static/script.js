@@ -23,6 +23,7 @@ function afteradd(json) {
     ta.value = "";
     t.placeholder = "title";
     d.placeholder = "detail";
+    document.getElementById("wrapper").insertAdjacentHTML("afterbegin", json["bmhtml"]);
   }
 }
 
@@ -38,11 +39,19 @@ function add() {
     .then((data) => afteradd(data));
 }
 
-function deletebm(bookmark) {
-  if(confirm('really delete "'+bookmark.dataset.title+'" ?')) {
-    fetch("/api/bm/delete?id="+bookmark.dataset.id)
+function afterdel(json, ref) {
+  if(json["result"] == "error") {
+    checkerror(json);
+  } else {
+    document.getElementById("wrapper").removeChild(ref.parentElement.parentElement);
+  }
+}
+
+function deletebm(ref) {
+  if(confirm('really delete "'+ref.dataset.title+'" ?')) {
+    fetch("/api/bm/delete?id="+ref.dataset.id)
       .then((response) => response.json())
-      .then((data) => checkerror(data));
+      .then((data) => afterdel(data, ref));
   }
 }
 

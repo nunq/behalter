@@ -8,6 +8,7 @@ import re
 import atexit
 from bs4 import BeautifulSoup
 from datetime import datetime
+from jinja2 import Template
 
 conn = sqlite3.connect("bm.db", check_same_thread=False)
 conn.row_factory = sqlite3.Row
@@ -61,7 +62,9 @@ def add_bookmark():
             cur.execute("UPDATE tags SET usage = usage+1 WHERE name = (?)", (tag,))
             conn.commit()
 
-    return json.dumps({"result": "success"})
+    bm = cur.execute("SELECT * from bookmarks WHERE title = (?) AND origlink = (?) ORDER BY id DESC", (title, link)).fetchone()
+
+    return json.dumps({"result": "success", "bmhtml": render_template("bookmark.html", bm=bm)})
 
 @app.route("/api/bm/linkinfo")
 def linkinfo():
