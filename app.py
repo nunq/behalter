@@ -22,7 +22,6 @@ atexit.register(shutdown)
 
 app = Flask(__name__)
 
-
 @app.template_filter()
 def unix_to_date(timestamp):
     return datetime.utcfromtimestamp(timestamp).strftime("%d-%m-%Y")
@@ -145,7 +144,7 @@ def list_tags():
     for row in tagrows:
         ret.append(row[0])
 
-    return json.dumps(ret)
+    return json.dumps({"result": "success", "tags": ret})
 
 @app.route("/api/tags/rename")
 def rename_tag():
