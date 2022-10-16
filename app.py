@@ -95,10 +95,19 @@ def linkinfo():
 
 @app.route("/api/bm/edit")
 def edit_bookmark():
-    # anhand der id das ding in der datenbank updaten, alle felder die aus dem frontend kommen
+    b_id = request.args.get("id")
+    title = request.args.get("title")
+    detail = request.args.get("detail")
+    note = request.args.get("note")
+    tags = request.args.get("tags")
 
-    source = request.args.get("link")
+    try:
+        cur.execute("UPDATE bookmarks SET title = (?), detail = (?), note = (?), tags = (?) WHERE id = (?)", (title, detail, note, tags, b_id))
+        conn.commit()
+    except:
+        return json.dumps({"result": "error", "res-text": "editing failed"})
 
+    return json.dumps({"result": "success"})
 
 @app.route("/api/bm/delete")
 def delete_bookmark():

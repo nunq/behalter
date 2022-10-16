@@ -14,7 +14,7 @@ function checkerror(json) {
 
 function afteradd(json) {
   if(json["result"] == "error") {
-    checkerror(json)
+    checkerror(json);
   } else {
     l.value = "";
     t.value = "";
@@ -44,6 +44,57 @@ function deletebm(bookmark) {
       .then((response) => response.json())
       .then((data) => checkerror(data));
   }
+}
+
+function afteredit(json, ref) {
+  if(json["result"] == "error") {
+    checkerror(json);
+  } else {
+    for (var i=0; i<ref.parentElement.children.length-1; i++) {
+      ref.parentElement.children[i].contentEditable = false;
+      ref.parentElement.children[i].classList.remove("editing")
+    }
+
+    ref.parentElement.children[3].classList.remove("tagsediting");
+    ref.parentElement.children[3].classList.add("tags");
+    for (var i=0; i<ref.parentElement.children[3].children.length; i++) {
+      ref.parentElement.children[3].children[i].setAttribute("onclick", "filterbytag(this)");
+    }
+    // remove button
+    ref.parentElement.removeChild(ref.parentElement.lastChild);
+  }
+}
+
+function sendedit(ref) {
+  let e_title = ref.parentElement.children[0].innerText;
+  let e_detail = ref.parentElement.children[1].innerText;
+  let e_note = ref.parentElement.children[2].innerText;
+  let e_tags = ref.parentElement.children[3].innerText;
+  let bm_id = ref.parentElement.children[4].children[1].dataset.id;
+
+  if(e_title.value == "") {
+    return
+  }
+
+  fetch("/api/bm/edit?id="+encodeURIComponent(bm_id)+"&note="+encodeURIComponent(e_note)+"&tags="+encodeURIComponent(e_tags)+"&detail="+encodeURIComponent(e_detail)+"&title="+encodeURIComponent(e_title))
+    .then((response) => response.json())
+    .then((data) => afteredit(data, ref));
+}
+
+function startedit(ref) {
+  // -1 because meta section shouldnt be editable
+  for (var i=0; i<ref.parentElement.parentElement.children.length-1; i++) {
+    ref.parentElement.parentElement.children[i].contentEditable = true;
+    ref.parentElement.parentElement.children[i].classList.add("editing")
+  }
+
+  // tags section needs special styling
+  ref.parentElement.parentElement.children[3].classList.remove("tags");
+  ref.parentElement.parentElement.children[3].classList.add("tagsediting");
+  for (var i=0; i<ref.parentElement.parentElement.children[3].children.length; i++) {
+    ref.parentElement.parentElement.children[3].children[i].removeAttribute("onclick");
+  }
+  ref.parentElement.parentElement.innerHTML += '<button onclick="sendedit(this)">submit</button>'
 }
 
 function filterbytag(tag) {
