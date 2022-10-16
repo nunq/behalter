@@ -8,7 +8,6 @@ import re
 import atexit
 from bs4 import BeautifulSoup
 from datetime import datetime
-from jinja2 import Template
 
 conn = sqlite3.connect("bm.db", check_same_thread=False)
 conn.row_factory = sqlite3.Row
