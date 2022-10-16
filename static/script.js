@@ -6,6 +6,9 @@ const d = document.getElementById("new-detail");
 const n = document.getElementById("new-note");
 const ta = document.getElementById("new-tags");
 
+// init tags autocomplete for ad dialog
+edittagsfetch(ta);
+
 function checkerror(json) {
   if(json["result"] == "error") {
     alert(json["res-text"]);
@@ -53,6 +56,27 @@ function deletebm(ref) {
       .then((response) => response.json())
       .then((data) => afterdel(data, ref));
   }
+}
+
+function edittags(json, ref) {
+  if(json["result"] == "error") {
+    checkerror(json);
+  } else {
+    var tags = tagger(ref, {
+      allow_duplicates: false,
+      allow_spaces: false,
+      wrap: true,
+      completion: {
+        list: json["tags"]
+      }
+    });
+  }
+}
+
+function edittagsfetch(ref) {
+  fetch("/api/tags/get")
+    .then((response) => response.json())
+    .then((data) => edittags(data, ref));
 }
 
 function afteredit(json, ref) {
