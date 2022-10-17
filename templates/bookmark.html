@@ -4,7 +4,7 @@
   <p class="note">{{ bm["note"] }}</p>
   <div class="tags">
     {% if bm["tags"] | length %}
-      {% for tag in bm["tags"].split(" ") %}
+      {% for tag in bm["tags"].split(",") %}
       <span onclick="filterbytag(this)">{{ tag }}</span>
       {% endfor %}
     {% endif %}

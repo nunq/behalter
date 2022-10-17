@@ -37,7 +37,7 @@ function add() {
     return;
   }
 
-  fetch("/api/bm/add?link="+encodeURIComponent(l.value)+"&note="+encodeURIComponent(n.value)+"&tags="+encodeURIComponent(ta.value)+"&detail="+encodeURIComponent(d.value)+"&title="+encodeURIComponent(t.value))
+  fetch("/api/bm/add?link="+encodeURIComponent(l.value)+"&note="+encodeURIComponent(n.value)+"&tags="+encodeURIComponent(ta.value.replace(/, *$/, "").replace(/, */, ","))+"&detail="+encodeURIComponent(d.value)+"&title="+encodeURIComponent(t.value))
     .then((response) => response.json())
     .then((data) => afteradd(data));
 }
@@ -114,8 +114,17 @@ function sendedit(ref) {
   let e_title = ref.parentElement.children[0].innerText;
   let e_detail = ref.parentElement.children[1].innerText;
   let e_note = ref.parentElement.children[2].innerText;
-  let e_tags = ref.parentElement.children[3].innerText;
   let bm_id = ref.parentElement.children[4].children[1].dataset.id;
+
+  if(ref.parentElement.children[3].children[0].value === undefined) {
+    // tags were edited
+    var e_tags_pre = ref.parentElement.children[3].children[0].children[0].value;
+  } else if(ref.parentElement.children[3].children[0].children[0] === undefined) {
+    // tags were not edited
+    var e_tags_pre = ref.parentElement.children[3].children[0].value;
+  }
+
+  let e_tags = e_tags_pre.replace(/, *$/, "").replace(/, */, ",");
 
   if(e_title.value == "") {
     return;
