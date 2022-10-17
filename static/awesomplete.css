@@ -10,10 +10,12 @@
 .awesomplete {
     display: inline-block;
     position: relative;
+    width: 100%;
 }
 
 .awesomplete > input {
     display: block;
+    width: 98%;
 }
 
 .awesomplete > ul {
