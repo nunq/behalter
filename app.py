@@ -66,21 +66,23 @@ def add_bookmark():
 @app.route("/api/bm/linkinfo")
 def linkinfo():
     link = request.args.get("link")
-
-    req = urllib.request.Request(
-            link,
-            data = None,
-            headers = {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:105.0) Gecko/20100101 Firefox/105.0"
-                }
-            )
-
-    res = urllib.request.urlopen(req)
-    soup = BeautifulSoup(res, "html.parser",
-                         from_encoding=res.info().get_param("charset"))
-    title = soup.title.string
-
+    title = ""
     detail = ""
+
+    req = urllib.request.Request(link, data = None, headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:105.0) Gecko/20100101 Firefox/105.0"})
+
+    try:
+        res = urllib.request.urlopen(req)
+    except:
+        return json.dumps({"result": "success", "title": title, "detail": detail})
+
+    soup = BeautifulSoup(res, "html.parser", from_encoding=res.info().get_param("charset"))
+
+    try:
+        title = soup.title.string
+    except:
+        pass
+
     if soup.find(name="meta", attrs={"name":"description"}) != None:
         detail = soup.find(name="meta", attrs={"name":"description"}).get("content")
 
