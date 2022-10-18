@@ -14,7 +14,7 @@
 }
 
 .awesomplete > input {
-    display: block;
+    display: inline-block;
     width: 98%;
 }
 
@@ -22,7 +22,6 @@
     position: absolute;
     left: 0;
     z-index: 1;
-    min-width: 100%;
     box-sizing: border-box;
     list-style: none;
     padding: 0;
