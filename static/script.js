@@ -6,7 +6,7 @@ const d = document.getElementById("new-detail");
 const n = document.getElementById("new-note");
 const ta = document.getElementById("new-tags");
 
-// init tags autocomplete for ad dialog
+// init tags autocomplete for add dialog
 edittagsfetch(ta);
 
 function checkerror(json) {
@@ -27,6 +27,7 @@ function afteradd(json) {
     t.placeholder = "title";
     d.placeholder = "detail";
     document.getElementById("wrapper").insertAdjacentHTML("afterbegin", json["bmhtml"]);
+    edittagsfetch(ta);
   }
 }
 
@@ -47,6 +48,7 @@ function afterdel(json, ref) {
     checkerror(json);
   } else {
     document.getElementById("wrapper").removeChild(ref.parentElement.parentElement);
+    edittagsfetch(ta);
   }
 }
 
@@ -95,6 +97,7 @@ function afteredit(json, ref) {
     checkerror(json);
   } else {
     ref.parentElement.outerHTML = json["bmhtml"];
+    edittagsfetch(ta);
   }
 }
 
@@ -102,7 +105,7 @@ function sendedit(ref) {
   let e_title = ref.parentElement.children[0].innerText;
   let e_detail = ref.parentElement.children[1].innerText;
   let e_note = ref.parentElement.children[2].innerText;
-  let bm_id = ref.parentElement.children[4].children[1].dataset.id;
+  let bm_id = ref.parentElement.children[5].children[1].dataset.id;
 
   if(ref.parentElement.children[3].children[0].value === undefined) {
     // tags were edited
@@ -127,7 +130,7 @@ function startedit(ref) {
   // -1 because meta section shouldnt be editable
   for (var i=0; i<ref.parentElement.parentElement.children.length-2; i++) {
     ref.parentElement.parentElement.children[i].contentEditable = true;
-    ref.parentElement.parentElement.children[i].classList.add("editing")
+    ref.parentElement.parentElement.children[i].classList.add("editing");
   }
 
   // tags section needs special styling
@@ -140,7 +143,8 @@ function startedit(ref) {
   var inner = ref.parentElement.parentElement.children[3].innerText;
   ref.parentElement.parentElement.children[3].innerHTML = "<input type='text' onfocusin='edittagsfetch(this)' value='"+inner.replaceAll(" ", ",")+"'>";
 
-  ref.parentElement.parentElement.innerHTML += '<button onclick="sendedit(this)">submit</button>'
+  ref.parentElement.insertAdjacentHTML("beforebegin", '<label style="font-size: 16px;"><input type="checkbox" id="usearchive">use archive</label>');
+  ref.parentElement.parentElement.innerHTML += '<button onclick="sendedit(this)">submit</button>';
 }
 
 function filterbytag(tag) {
