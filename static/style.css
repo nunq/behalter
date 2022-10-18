@@ -10,7 +10,7 @@ h1, h1 > a, h1 > a:visited {
 }
 #wrapper {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(372px, 1fr));
   grid-template-rows: masonry;
   grid-gap: 0.5rem;
   margin: 0;
