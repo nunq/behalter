@@ -52,7 +52,7 @@ def add_bookmark():
     except:
         return json.dumps({"result": "error", "res-text": "database insert failed"})
 
-    for tag in tags.split(" "):
+    for tag in tags.split(","):
         try:
             cur.execute("INSERT INTO tags (name, usage) VALUES (?, ?)", (tag, 1))
             conn.commit()
@@ -61,7 +61,6 @@ def add_bookmark():
             conn.commit()
 
     bm = cur.execute("SELECT * from bookmarks WHERE title = (?) AND origlink = (?) ORDER BY id DESC", (title, link)).fetchone()
-
     return json.dumps({"result": "success", "bmhtml": render_template("bookmark.html", bm=bm)})
 
 @app.route("/api/bm/linkinfo")
@@ -108,7 +107,8 @@ def edit_bookmark():
     except:
         return json.dumps({"result": "error", "res-text": "editing failed"})
 
-    return json.dumps({"result": "success"})
+    bm = cur.execute("SELECT * from bookmarks WHERE id = (?)", (b_id,)).fetchone()
+    return json.dumps({"result": "success", "bmhtml": render_template("bookmark.html", bm=bm)})
 
 @app.route("/api/bm/delete")
 def delete_bookmark():

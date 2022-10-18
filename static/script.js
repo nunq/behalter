@@ -94,19 +94,7 @@ function afteredit(json, ref) {
   if(json["result"] == "error") {
     checkerror(json);
   } else {
-    for (var i=0; i<ref.parentElement.children.length-1; i++) {
-      ref.parentElement.children[i].contentEditable = false;
-      ref.parentElement.children[i].classList.remove("editing")
-    }
-
-    ref.parentElement.children[3].classList.remove("tagsediting");
-    ref.parentElement.children[3].classList.add("tags");
-    for (var i=0; i<ref.parentElement.children[3].children.length; i++) {
-      ref.parentElement.children[3].children[i].setAttribute("onclick", "filterbytag(this)");
-      ref.parentElement.children[4].children[0].setAttribute("onclick", "startedit(this)");
-    }
-    // remove button
-    ref.parentElement.removeChild(ref.parentElement.lastChild);
+    ref.parentElement.outerHTML = json["bmhtml"];
   }
 }
 
