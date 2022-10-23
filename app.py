@@ -103,6 +103,36 @@ def edit_bookmark():
     note = request.args.get("note")
     tags = request.args.get("tags")
 
+    t2 = tags.split(",")
+
+    try:
+        t1 = cur.execute("SELECT * from bookmarks WHERE id = (?)", (b_id,)).fetchone()["tags"].split(",")
+    except:
+        return json.dumps({"result": "error", "res-text": "couldn't get tags for bookmark id "+b_id})
+
+    tags_old = list(set(t1).difference(set(t2)).union(set(t1).intersection(set(t2))))
+    tags_new = list(set(t2).difference(set(t1)))
+    tags_missing = list(set(t1).difference(set(t2)))
+
+    # try insert new tags, if they already exist then increase usage by one
+    for tag in tags_new:
+        if tag != "":
+            try:
+                cur.execute("INSERT INTO tags (name, usage) VALUES (?, ?)", (tag, 1))
+                conn.commit()
+            except sqlite3.IntegrityError: # already exists
+                cur.execute("UPDATE tags SET usage = usage+1 WHERE name = (?)", (tag,))
+                conn.commit()
+
+    # for every tag thats missing (deleted) decrease usage by one and remove if 0
+    for tag in tags_missing:
+        if cur.execute("SELECT * FROM tags WHERE name = (?)", (tag,)).fetchone()["usage"] == 1:
+            cur.execute("DELETE FROM tags WHERE name = (?)", (tag,))
+            conn.commit()
+        else:
+            cur.execute("UPDATE tags SET usage = usage-1 WHERE name = (?)", (tag,))
+            conn.commit()
+
     try:
         cur.execute("UPDATE bookmarks SET title = (?), detail = (?), note = (?), tags = (?) WHERE id = (?)", (title, detail, note, tags, b_id))
         conn.commit()
