@@ -33,6 +33,39 @@ def index():
     bm = cur.execute("SELECT * FROM bookmarks WHERE NOT deleted ORDER BY id DESC").fetchall()
     return render_template("index.html", bookmarks=bm)
 
+@app.route("/search")
+def search_bookmarks():
+    query = request.args.get("q")
+    tag = request.args.get("tag") # used by filterbytag
+
+    if (tag != "" and tag != None) and (query == "" or query == None):
+        # tag search from filterbytag
+        tagsearch = cur.execute("SELECT * FROM bookmarks WHERE NOT deleted AND tags LIKE (?) ORDER BY id DESC", ("%"+tag+"%",)).fetchall()
+        return render_template("index.html", bookmarks=tagsearch)
+    elif (query != "" and query != None) and (tag == "" or tag == None) and bool(re.search("^tag:(\w+)" , query)):
+        # tag search from search box
+        tag = re.search("^tag:(\w+)" , query).group(1)
+        tagsearch = cur.execute("SELECT * FROM bookmarks WHERE NOT deleted AND tags LIKE (?) ORDER BY id DESC", ("%"+tag+"%",)).fetchall()
+        return render_template("index.html", bookmarks=tagsearch)
+    elif (query != "" and query != None) and (tag == "" or tag == None) and not bool(re.search("^tag:(\w+)" , query)):
+        # general search query
+        qsearch = cur.execute("SELECT * FROM bookmarks WHERE NOT deleted AND (title LIKE (?) OR origlink LIKE (?) OR detail LIKE (?) or note LIKE (?)) ORDER BY id DESC", ("%"+query+"%", "%"+query+"%", "%"+query+"%", "%"+query+"%")).fetchall()
+        return render_template("index.html", bookmarks=qsearch)
+    else:
+        return render_template("index.html", bookmarks="")
+
+@app.route("/export")
+def export_bookmarks():
+    bookmarks = cur.execute("SELECT * FROM bookmarks ORDER BY id DESC").fetchall()
+    return json.dumps([dict(bm) for bm in bookmarks])
+
+@app.route("/renametag")
+def rename_tag():
+    return render_template("renametag.html")
+
+# -----------------------------------
+# api
+
 @app.route("/api/bm/add")
 def add_bookmark():
     title = request.args.get("title")
@@ -153,27 +186,6 @@ def delete_bookmark():
         return json.dumps({"result": "error", "res-text": "database mark as deleted failed"})
 
     return json.dumps({"result": "success"})
-
-@app.route("/search")
-def search_bookmarks():
-    query = request.args.get("q")
-    tag = request.args.get("tag") # used by filterbytag
-
-    if (tag != "" and tag != None) and (query == "" or query == None):
-        # tag search from filterbytag
-        tagsearch = cur.execute("SELECT * FROM bookmarks WHERE NOT deleted AND tags LIKE (?) ORDER BY id DESC", ("%"+tag+"%",)).fetchall()
-        return render_template("index.html", bookmarks=tagsearch)
-    elif (query != "" and query != None) and (tag == "" or tag == None) and bool(re.search("^tag:(\w+)" , query)):
-        # tag search from search box
-        tag = re.search("^tag:(\w+)" , query).group(1)
-        tagsearch = cur.execute("SELECT * FROM bookmarks WHERE NOT deleted AND tags LIKE (?) ORDER BY id DESC", ("%"+tag+"%",)).fetchall()
-        return render_template("index.html", bookmarks=tagsearch)
-    elif (query != "" and query != None) and (tag == "" or tag == None) and not bool(re.search("^tag:(\w+)" , query)):
-        # general search query
-        qsearch = cur.execute("SELECT * FROM bookmarks WHERE NOT deleted AND (title LIKE (?) OR origlink LIKE (?) OR detail LIKE (?) or note LIKE (?)) ORDER BY id DESC", ("%"+query+"%", "%"+query+"%", "%"+query+"%", "%"+query+"%")).fetchall()
-        return render_template("index.html", bookmarks=qsearch)
-    else:
-        return render_template("index.html", bookmarks="")
 
 @app.route("/api/tags/get")
 def list_tags():
