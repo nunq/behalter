@@ -141,14 +141,15 @@ function startedit(ref) {
     ref.removeAttribute("onclick");
   }
   var inner = ref.parentElement.parentElement.children[3].innerText;
-  ref.parentElement.parentElement.children[3].innerHTML = "<input type='text' onfocusin='edittagsfetch(this)' value='"+inner.replaceAll(" ", ",")+"'>";
+  ref.parentElement.parentElement.children[3].innerHTML = "<input type='text' onclick='edittagsfetch(this)' value='"+inner.replaceAll(" ", ",")+"'>";
 
   ref.parentElement.insertAdjacentHTML("beforebegin", '<label style="font-size: 16px;"><input type="checkbox" id="usearchive">use archive</label>');
   ref.parentElement.parentElement.innerHTML += '<button onclick="sendedit(this)">submit</button>';
+
 }
 
 function filterbytag(tag) {
-  window.location.href = "/search?tag="+encodeURIComponent(tag.innerHTML);
+  window.location.href = "/search?tag="+encodeURIComponent(tag.innerText);
 }
 
 function resetfields() {
