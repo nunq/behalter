@@ -157,12 +157,19 @@ def delete_bookmark():
 @app.route("/search")
 def search_bookmarks():
     query = request.args.get("q")
-    tag = request.args.get("tag")
+    tag = request.args.get("tag") # used by filterbytag
 
     if (tag != "" and tag != None) and (query == "" or query == None):
+        # tag search from filterbytag
         tagsearch = cur.execute("SELECT * FROM bookmarks WHERE NOT deleted AND tags LIKE (?) ORDER BY id DESC", ("%"+tag+"%",)).fetchall()
         return render_template("index.html", bookmarks=tagsearch)
-    elif (query != "" and query) != None and (tag == "" or tag == None):
+    elif (query != "" and query != None) and (tag == "" or tag == None) and bool(re.search("^tag:(\w+)" , query)):
+        # tag search from search box
+        tag = re.search("^tag:(\w+)" , query).group(1)
+        tagsearch = cur.execute("SELECT * FROM bookmarks WHERE NOT deleted AND tags LIKE (?) ORDER BY id DESC", ("%"+tag+"%",)).fetchall()
+        return render_template("index.html", bookmarks=tagsearch)
+    elif (query != "" and query != None) and (tag == "" or tag == None) and not bool(re.search("^tag:(\w+)" , query)):
+        # general search query
         qsearch = cur.execute("SELECT * FROM bookmarks WHERE NOT deleted AND (title LIKE (?) OR origlink LIKE (?) OR detail LIKE (?) or note LIKE (?)) ORDER BY id DESC", ("%"+query+"%", "%"+query+"%", "%"+query+"%", "%"+query+"%")).fetchall()
         return render_template("index.html", bookmarks=qsearch)
     else:
