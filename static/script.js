@@ -27,7 +27,6 @@ function afteradd(json) {
     t.placeholder = "title";
     d.placeholder = "detail";
     document.getElementById("wrapper").insertAdjacentHTML("afterbegin", json["bmhtml"]);
-    edittagsfetch(ta);
   }
 }
 
@@ -48,7 +47,6 @@ function afterdel(json, ref) {
     checkerror(json);
   } else {
     document.getElementById("wrapper").removeChild(ref.parentElement.parentElement);
-    edittagsfetch(ta);
   }
 }
 
@@ -97,7 +95,6 @@ function afteredit(json, ref) {
     checkerror(json);
   } else {
     ref.parentElement.outerHTML = json["bmhtml"];
-    edittagsfetch(ta);
   }
 }
 
@@ -161,11 +158,14 @@ function resetfields() {
 
 function setlinkinfo(data) {
   t.value = data["title"];
+  d.value = data["detail"];
+
+  if(data["title"] == "") {
+    t.placeholder = "couldn't fetch title";
+  }
+
   if(data["detail"] == "") {
-    d.value = data["detail"];
     d.placeholder = "couldn't fetch detail";
-  } else {
-    d.value = data["detail"];
   }
 }
 
