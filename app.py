@@ -198,10 +198,5 @@ def list_tags():
 
     return json.dumps({"result": "success", "tags": ret})
 
-@app.route("/api/tags/rename")
-def rename_tag():
-    # TODO
-    return ""
-
 if __name__ == "__main__":
     app.run()
