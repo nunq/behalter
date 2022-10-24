@@ -61,10 +61,6 @@ def export_bookmarks():
     bookmarks = cur.execute("SELECT * FROM bookmarks ORDER BY id DESC").fetchall()
     return json.dumps([dict(bm) for bm in bookmarks])
 
-@app.route("/renametag")
-def rename_tag():
-    return render_template("renametag.html")
-
 # -----------------------------------
 # api
 
