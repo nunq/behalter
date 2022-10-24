@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
-
-from flask import Flask, render_template, request
+import atexit
 import json
+import re
 import sqlite3
 import urllib.request
-import re
-import atexit
-from bs4 import BeautifulSoup
 from datetime import datetime
+
+from bs4 import BeautifulSoup
+from flask import Flask, render_template, request
+
+# -----------------------------------
 
 conn = sqlite3.connect("bm.db", check_same_thread=False)
 conn.row_factory = sqlite3.Row
