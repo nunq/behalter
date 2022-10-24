@@ -38,7 +38,7 @@ function add() {
     return;
   }
 
-  fetch("/api/bm/add?link="+encodeURIComponent(l.value)+"&note="+encodeURIComponent(n.value)+"&tags="+encodeURIComponent(ta.value.replace(/, *$/, "").replace(/, */, ","))+"&detail="+encodeURIComponent(d.value)+"&title="+encodeURIComponent(t.value))
+  fetch("/api/bm/add?link="+encodeURIComponent(l.value)+"&note="+encodeURIComponent(n.value)+"&tags="+encodeURIComponent(ta.value.replace(/, *$/, ""))+"&detail="+encodeURIComponent(d.value)+"&title="+encodeURIComponent(t.value))
     .then((response) => response.json())
     .then((data) => afteradd(data));
 }

@@ -76,14 +76,20 @@ def add_bookmark():
     except:
         domain = re.search(r'://(.*?)$', link).group(1)
 
+    tags_pre = tags.split(",")
+    tags_clean = list()
+
+    for tag in tags_pre:
+        tags_clean.append(re.search("^\s*(\S+)\s*$", tag).group(1))
+
     try:
         cur.execute("INSERT INTO bookmarks (title, currentlink, origlink, archivelink, domain, detail, note, tags) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                (title, link, link, "ARCHIVE TODO", domain, detail, note, tags))
+                (title, link, link, "ARCHIVE TODO", domain, detail, note, ",".join(tags_clean)))
         conn.commit()
     except:
         return json.dumps({"result": "error", "res-text": "database insert failed"})
 
-    for tag in tags.split(","):
+    for tag in tags_clean:
         try:
             cur.execute("INSERT INTO tags (name, usage) VALUES (?, ?)", (tag, 1))
             conn.commit()
@@ -134,7 +140,11 @@ def edit_bookmark():
     note = request.args.get("note")
     tags = request.args.get("tags")
 
-    t2 = tags.split(",")
+    tags_pre = tags.split(",")
+    t2 = list()
+
+    for tag in tags_pre: # clean tags whitespace
+        t2.append(re.search("^\s*(\S+)\s*$", tag).group(1))
 
     try:
         t1 = cur.execute("SELECT * from bookmarks WHERE id = (?)", (b_id,)).fetchone()["tags"].split(",")
