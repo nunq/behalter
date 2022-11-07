@@ -76,11 +76,12 @@ def add_bookmark():
     except:
         domain = re.search(r'://(.*?)$', link).group(1)
 
-    tags_pre = tags.split(",")
     tags_clean = list()
 
-    for tag in tags_pre:
-        tags_clean.append(re.search("^\s*(\S+)\s*$", tag).group(1))
+    if tags != "":
+        tags_pre = tags.split(",")
+        for tag in tags_pre:
+            tags_clean.append(re.search("^\s*(\S+)\s*$", tag).group(1))
 
     try:
         cur.execute("INSERT INTO bookmarks (title, currentlink, origlink, archivelink, domain, detail, note, tags) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
