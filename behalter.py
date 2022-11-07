@@ -141,17 +141,19 @@ def edit_bookmark():
     note = request.args.get("note")
     tags = request.args.get("tags")
 
-    tags_pre = tags.split(",")
     t2 = list()
 
-    for tag in tags_pre: # clean tags whitespace
-        t2.append(re.search("^\s*(\S+)\s*$", tag).group(1))
+    if tags != "":
+        tags_pre = tags.split(",")
+        for tag in tags_pre: # clean tags whitespace
+            t2.append(re.search("^\s*(\S+)\s*$", tag).group(1))
 
     try:
-        t1 = cur.execute("SELECT * from bookmarks WHERE id = (?)", (b_id,)).fetchone()["tags"].split(",")
+        tag_str = cur.execute("SELECT * from bookmarks WHERE id = (?)", (b_id,)).fetchone()["tags"]
     except:
         return json.dumps({"result": "error", "res-text": "couldn't get tags for bookmark id "+b_id})
 
+    t1 = tag_str.split(",")
     tags_old = list(set(t1).difference(set(t2)).union(set(t1).intersection(set(t2))))
     tags_new = list(set(t2).difference(set(t1)))
     tags_missing = list(set(t1).difference(set(t2)))
@@ -167,13 +169,14 @@ def edit_bookmark():
                 conn.commit()
 
     # for every tag thats missing (deleted) decrease usage by one and remove if 0
-    for tag in tags_missing:
-        if cur.execute("SELECT * FROM tags WHERE name = (?)", (tag,)).fetchone()["usage"] == 1:
-            cur.execute("DELETE FROM tags WHERE name = (?)", (tag,))
-            conn.commit()
-        else:
-            cur.execute("UPDATE tags SET usage = usage-1 WHERE name = (?)", (tag,))
-            conn.commit()
+    if tag_str != "":
+        for tag in tags_missing:
+            if cur.execute("SELECT * FROM tags WHERE name = (?)", (tag,)).fetchone()["usage"] == 1:
+                cur.execute("DELETE FROM tags WHERE name = (?)", (tag,))
+                conn.commit()
+            else:
+                cur.execute("UPDATE tags SET usage = usage-1 WHERE name = (?)", (tag,))
+                conn.commit()
 
     try:
         cur.execute("UPDATE bookmarks SET title = (?), detail = (?), note = (?), tags = (?) WHERE id = (?)", (title, detail, note, tags, b_id))
