@@ -5,9 +5,9 @@ After=network.target
 [Service]
 User=behalter
 Group=www-data
-WorkingDirectory=/opt/behalter
-Environment="PATH=/home/behalter/ PYTHON PKGS"
-ExecStart= PY UWSGI --ini uwsgi.ini
+WorkingDirectory=/home/behalter/app/
+Environment="PATH=/home/behalter/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+ExecStart=uwsgi --ini uwsgi.iniSGI --ini uwsgi.ini
 
 [Install]
 WantedBy=multi-user.target
