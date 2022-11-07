@@ -155,8 +155,6 @@ def edit_bookmark():
     tags_new = list(set(t2).difference(set(t1)))
     tags_missing = list(set(t1).difference(set(t2)))
 
-    #return json.dumps({"result": "error", "res-text": "t1: "+str(t1)+" t2: "+str(t2)+"old: "+str(tags_old)+" new: "+str(tags_new)+" missing: "+str(tags_missing)})
-
     # try insert new tags, if they already exist then increase usage by one
     for tag in tags_new:
         if tag != "":
