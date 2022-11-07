@@ -2,12 +2,13 @@
 import atexit
 import json
 import re
+import os
 import sqlite3
 import urllib.request
 from datetime import datetime
 
 from bs4 import BeautifulSoup
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_from_directory
 
 # -----------------------------------
 
@@ -34,6 +35,11 @@ def unix_to_date(timestamp):
 def index():
     bm = cur.execute("SELECT * FROM bookmarks WHERE NOT deleted ORDER BY id DESC").fetchall()
     return render_template("index.html", bookmarks=bm)
+
+@app.route("/favicon.ico")
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, "static"),
+            "favicon.ico", mimetype="image/vnd.microsoft.icon")
 
 @app.route("/search")
 def search_bookmarks():
