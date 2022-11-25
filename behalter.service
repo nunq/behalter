@@ -7,7 +7,7 @@ User=behalter
 Group=www-data
 WorkingDirectory=/home/behalter/app/
 Environment="PATH=/home/behalter/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-ExecStart=uwsgi --ini uwsgi.iniSGI --ini uwsgi.ini
+ExecStart=uwsgi --ini uwsgi.ini
 
 [Install]
 WantedBy=multi-user.target
