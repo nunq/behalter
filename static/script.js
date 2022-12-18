@@ -102,7 +102,7 @@ function sendedit(ref) {
   let e_title = ref.parentElement.children[0].innerText;
   let e_detail = ref.parentElement.children[1].innerText;
   let e_note = ref.parentElement.children[2].innerText;
-  let bm_id = ref.parentElement.children[5].children[1].dataset.id;
+  let bm_id = ref.parentElement.children[4].children[1].dataset.id;
 
   if(ref.parentElement.children[3].children[0].value === undefined) {
     // tags were edited
