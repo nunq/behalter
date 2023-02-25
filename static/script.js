@@ -186,3 +186,8 @@ function getlinkinfo() {
     .then((response) => response.json())
     .then((data) => setlinkinfo(data));
 }
+
+document.body.addEventListener("keydown", function(e) {
+  if(!(e.keyCode == 13 && e.ctrlKey)) return;
+  add();
+});
