@@ -1,10 +1,9 @@
 [tool.poetry]
-name = "behalter"
-version = "0.1.0"
 description = "A simple bookmark manager"
 authors = ["nunq <46054695+nunq@users.noreply.github.com>"]
 license = "MIT"
 readme = "README.md"
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.12"
