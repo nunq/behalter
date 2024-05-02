@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "behalter"
+version = "0.1.0"
+description = "A simple bookmark manager"
+authors = ["nunq <46054695+nunq@users.noreply.github.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+beautifulsoup4 = "^4.12.3"
+flask = "^3.0.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
