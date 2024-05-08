@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """bundles util functions"""
-from json import dumps
-
 import urllib.request
+
 from bs4 import BeautifulSoup
+from flask import jsonify
 
 from behalter import app
 

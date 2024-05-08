@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 """flask views"""
 from pathlib import Path
-from json import dumps
 
-from flask import render_template, request, send_from_directory
+from flask import jsonify
+from flask import render_template
+from flask import request
+from flask import send_from_directory
 
 from behalter import app, database
 from behalter.util import fetch_link_info
