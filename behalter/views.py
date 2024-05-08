@@ -11,7 +11,7 @@ from behalter.util import fetch_link_info
 
 @app.route("/")
 def index():
-    bm = database.get_all_bookmarks()
+    bm = database.get_all_bookmarks(include_deleted=False)
     return render_template("index.html", bookmarks=bm)
 
 
@@ -56,4 +56,17 @@ def link_info():
 @app.route("/api/tags/get")
 def list_tags():
     ret = database.get_tags_ordered_by_usage()
-    return dumps({"result": "success", "tags": ret})
+    return jsonify({"result": "success", "tags": ret})
+
+
+@app.route("/api/bm/delete")
+def delete_bookmark():
+    id = request.args.get("id")
+    success = database.mark_bookmark_as_deleted(id)
+    if success:
+        return jsonify({"result": "success"})
+
+    else:
+        return jsonify(
+            {"result": "error", "res-text": "database mark as deleted failed"}
+        )

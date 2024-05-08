@@ -84,3 +84,15 @@ def get_tags_ordered_by_usage():
     res = db.session.execute(stmt).scalars()
     tags_ordered = list(res)
     return tags_ordered
+
+
+def mark_bookmark_as_deleted(id_to_delete):
+    try:
+        bm = db.session.execute(
+            db.select(Bookmark).filter_by(id=id_to_delete)
+        ).scalar_one()
+        bm.deleted = True
+        db.session.commit()
+        return True
+    except:
+        return False
