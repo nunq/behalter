@@ -6,7 +6,7 @@ from json import dumps
 from flask import render_template, request, send_from_directory
 
 from behalter import app, database
-from behalter.util import *
+from behalter.util import fetch_link_info
 
 
 @app.route("/")
