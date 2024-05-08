@@ -36,6 +36,7 @@ bookmark_tag = Table(
 )
 
 
+@dataclass
 class Bookmark(db.Model):  # pylint: disable=R0903
     """bookmark database model"""
 
@@ -54,6 +55,7 @@ class Bookmark(db.Model):  # pylint: disable=R0903
     )
 
 
+@dataclass
 class Tag(db.Model):  # pylint: disable=R0903
     """tag database model"""
 
