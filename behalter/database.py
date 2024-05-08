@@ -63,3 +63,15 @@ def create_bookmark(title, link, detail, note, tags=None):
     db.session.add(bm)
     db.session.commit()
     return bm
+
+
+def get_tags_ordered_by_usage():
+    """fetch tags from tag db table, ordered by their usage desc
+
+    Returns:
+        list(tag): list of tag names
+    """
+    stmt = db.select(Tag.name).order_by(Tag.usage.desc())
+    res = db.session.execute(stmt).scalars()
+    tags_ordered = list(res)
+    return tags_ordered
