@@ -2,23 +2,38 @@
 """this module does all the db retrieval"""
 from re import search
 
-from behalter import app
-from behalter.models import *
-from sqlalchemy.exc import InvalidRequestError
+from behalter.models import Bookmark, Tag, db
 
 
 def get_all_bookmarks():
-    # try:
+    """fetches all undeleted bookmarks from the database,
+    ordered by id descending.
+
+    Returns:
+        list(Bookmark): list of Bookmark ORM types
+    """
     stmt = (
         db.select(Bookmark)
-        .where(Bookmark.deleted == False)
+        .where(Bookmark.deleted == False)  # pylint: disable=C0121
         .order_by(Bookmark.id.desc())
-    )  # pylint: disable=C0121
+    )
     bookmarks = db.session.scalars(stmt)
     return bookmarks
 
 
 def create_bookmark(title, link, detail, note, tags=None):
+    """creates a bookmark in the database, also sets up new tags
+
+    Args:
+        title (str): bookmark title (auto fetched)
+        link (str): bookmark link
+        detail (str): bookmark detail text (auto fetched from html meta description tag)
+        note (str): personal note text
+        tags (str, optional): bookmark tags. Defaults to None.
+
+    Returns:
+        Bookmark: created bookmark element
+    """
     try:
         domain = search(r"://(.*?)(/|$)", link).group(1)
     except AttributeError:
