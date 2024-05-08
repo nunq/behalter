@@ -18,13 +18,16 @@ from flask_sqlalchemy import SQLAlchemy as sa
 from behalter import app
 
 
-class Base(DeclarativeBase):
-    pass
+class Base(DeclarativeBase):  # pylint: disable=R0903
+    """sqlalchemy orm base class for declarative mappings"""
+
+    pass  # pylint: disable=W0107
 
 
 db = sa(model_class=Base)
 db.init_app(app)
 
+# bookmark <-> tag association table
 bookmark_tag = Table(
     "bookmark_tag",
     Base.metadata,
@@ -33,7 +36,9 @@ bookmark_tag = Table(
 )
 
 
-class Bookmark(db.Model):
+class Bookmark(db.Model):  # pylint: disable=R0903
+    """bookmark database model"""
+
     __tablename__ = "bookmark"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
@@ -49,7 +54,9 @@ class Bookmark(db.Model):
     )
 
 
-class Tag(db.Model):
+class Tag(db.Model):  # pylint: disable=R0903
+    """tag database model"""
+
     __tablename__ = "tag"
 
     name: Mapped[str] = mapped_column(primary_key=True)
