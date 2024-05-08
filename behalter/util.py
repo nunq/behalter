@@ -28,7 +28,7 @@ def fetch_link_info(url):
     try:
         res = urllib.request.urlopen(req)
     except:
-        return dumps({"result": "success", "title": title, "detail": detail})
+        return jsonify({"result": "success", "title": title, "detail": detail})
 
     soup = BeautifulSoup(
         res, "html.parser", from_encoding=res.info().get_param("charset")
@@ -56,4 +56,4 @@ def fetch_link_info(url):
             "content"
         )
 
-    return dumps({"result": "success", "title": title, "detail": detail})
+    return jsonify({"result": "success", "title": title, "detail": detail})

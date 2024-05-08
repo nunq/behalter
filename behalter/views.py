@@ -43,7 +43,7 @@ def add_bookmark():
     # TODO handle duplicates
     # TODO redirect to bookmark if duplicate detected
     # TODO implement search?id=<id> for that
-    return dumps(
+    return jsonify(
         {"result": "success", "bmhtml": render_template("bookmark.html", bm=created_bm)}
     )
 
