@@ -52,9 +52,10 @@ def create_bookmark(title, link, detail, note, tags=None):
                 db.select(Tag).where(Tag.name == tag_name)
             ).scalar()
             if not tag:
-                tag = Tag(name=tag_name, usage=1)
+                tag = Tag(name=tag_name, usage=0)
                 db.session.add(tag)
             bm_tags.append(tag)
+            tag.usage += 1
 
     bm = Bookmark(
         title=title, link=link, detail=detail, domain=domain, note=note, tags=bm_tags
