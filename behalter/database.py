@@ -17,11 +17,13 @@ def get_all_bookmarks(include_deleted=False):
     """
     stmt = (
         db.select(Bookmark)
-        .where(or_(
-            Bookmark.deleted == False,  # pylint: disable=C0121
-            # sql shortcut to avoid branching this function
-            Bookmark.deleted == include_deleted
-            ))
+        .where(
+            or_(
+                Bookmark.deleted == False,  # pylint: disable=C0121
+                # sql shortcut to avoid branching this function
+                Bookmark.deleted == include_deleted,
+            )
+        )
         .order_by(Bookmark.id.desc())
     )
     bookmarks = db.session.scalars(stmt)
