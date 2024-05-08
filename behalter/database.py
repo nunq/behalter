@@ -37,8 +37,7 @@ def create_bookmark(title, link, detail, note, tags=None):
     try:
         domain = search(r"://(.*?)(/|$)", link).group(1)
     except AttributeError:
-        pass
-        # TODO
+        domain = ""
 
     tags_clean = None
     if tags is not None:
