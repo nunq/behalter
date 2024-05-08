@@ -6,7 +6,6 @@ import urllib.request
 from bs4 import BeautifulSoup
 
 from behalter import app
-from behalter import models
 
 
 @app.template_filter()
