@@ -2,10 +2,13 @@
 """this module does all the db retrieval"""
 from re import search
 
+from sqlalchemy import or_
+from flask import jsonify
+
 from behalter.models import Bookmark, Tag, db
 
 
-def get_all_bookmarks():
+def get_all_bookmarks(include_deleted=False):
     """fetches all undeleted bookmarks from the database,
     ordered by id descending.
 
@@ -14,7 +17,11 @@ def get_all_bookmarks():
     """
     stmt = (
         db.select(Bookmark)
-        .where(Bookmark.deleted == False)  # pylint: disable=C0121
+        .where(or_(
+            Bookmark.deleted == False,  # pylint: disable=C0121
+            # sql shortcut to avoid branching this function
+            Bookmark.deleted == include_deleted
+            ))
         .order_by(Bookmark.id.desc())
     )
     bookmarks = db.session.scalars(stmt)
