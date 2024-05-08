@@ -42,12 +42,16 @@ def create_bookmark(title, link, detail, note, tags=None):
 
     tags_clean = None
     if tags is not None:
-        tags_clean = [tag_dirty.strip() for tag_dirty in tags.split(",")]
+        tags_clean = {
+            tag_dirty.strip() for tag_dirty in tags.split(",") if tag_dirty != ""
+        }
 
     bm_tags = []
     if tags_clean:
         for tag_name in tags_clean:
-            tag = Tag.query.filter_by(name=tag_name).first()  # TODO
+            tag = db.session.execute(
+                db.select(Tag).where(Tag.name == tag_name)
+            ).scalar()
             if not tag:
                 tag = Tag(name=tag_name, usage=1)
                 db.session.add(tag)
