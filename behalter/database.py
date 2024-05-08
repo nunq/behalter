@@ -9,7 +9,11 @@ from sqlalchemy.exc import InvalidRequestError
 
 def get_all_bookmarks():
     # try:
-    stmt = db.select(Bookmark).where(Bookmark.deleted == False)  # pylint: disable=C0121
+    stmt = (
+        db.select(Bookmark)
+        .where(Bookmark.deleted == False)
+        .order_by(Bookmark.id.desc())
+    )  # pylint: disable=C0121
     bookmarks = db.session.scalars(stmt)
     return bookmarks
 
