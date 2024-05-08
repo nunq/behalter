@@ -2,18 +2,19 @@
 """db models"""
 from __future__ import annotations
 
+from dataclasses import dataclass
 from datetime import datetime as dt
 from datetime import timezone
 from typing import List
 
+from flask_sqlalchemy import SQLAlchemy as sa
 from sqlalchemy import Column
-from sqlalchemy import Table
 from sqlalchemy import ForeignKey
+from sqlalchemy import Table
+from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
-from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import relationship
-from flask_sqlalchemy import SQLAlchemy as sa
 
 from behalter import app
 

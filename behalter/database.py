@@ -3,7 +3,6 @@
 from re import search
 
 from sqlalchemy import or_
-from flask import jsonify
 
 from behalter.models import Bookmark, Tag, db
 
