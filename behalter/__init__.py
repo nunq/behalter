@@ -6,4 +6,4 @@ app = Flask(__name__)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///bm.db"
 
-import behalter.views # pylint: disable=wrong-import-position
+import behalter.views  # pylint: disable=wrong-import-position
