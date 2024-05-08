@@ -51,3 +51,9 @@ def link_info():
     ra = request.args
     link = ra.get("link")
     return fetch_link_info(link)
+
+
+@app.route("/api/tags/get")
+def list_tags():
+    ret = database.get_tags_ordered_by_usage()
+    return dumps({"result": "success", "tags": ret})
