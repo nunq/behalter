@@ -4,7 +4,7 @@ from re import search
 
 from sqlalchemy import or_
 
-from behalter.models import Bookmark, Tag, db
+from behalter.models import Bookmark, Tag, bookmark_tag, db
 
 
 def get_all_bookmarks(include_deleted=False):
@@ -16,7 +16,7 @@ def get_all_bookmarks(include_deleted=False):
     """
     stmt = (
         db.select(Bookmark)
-        .where(
+        .filter(
             or_(
                 Bookmark.deleted == False,  # pylint: disable=C0121
                 # sql shortcut to avoid branching this function
@@ -57,7 +57,7 @@ def create_bookmark(title, link, detail, note, tags=None):
     if tags_clean:
         for tag_name in tags_clean:
             tag = db.session.execute(
-                db.select(Tag).where(Tag.name == tag_name)
+                db.select(Tag).filter(Tag.name == tag_name)
             ).scalar()
             if not tag:
                 tag = Tag(name=tag_name, usage=0)
@@ -136,7 +136,7 @@ def edit_bookmark(b_id, new_title, new_detail, new_note, new_tags_str):
         # try insert new tags, if they already exist increment usage
         for tag_name in tags_new:
             tag = db.session.execute(
-                db.select(Tag).where(Tag.name == tag_name)
+                db.select(Tag).filter(Tag.name == tag_name)
             ).scalar()
             if not tag:
                 tag = Tag(name=tag_name, usage=0)
@@ -147,7 +147,7 @@ def edit_bookmark(b_id, new_title, new_detail, new_note, new_tags_str):
         # for every tag thats missing (deleted) decrease usage by one and remove if 0
         for tag_name in tags_missing:
             tag = db.session.execute(
-                db.select(Tag).where(Tag.name == tag_name)
+                db.select(Tag).filter(Tag.name == tag_name)
             ).scalar()
             bm_db.tags.remove(tag)
             if len(tag.bookmarks) == 0:
