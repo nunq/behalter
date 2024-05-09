@@ -12,7 +12,7 @@
   <div class="meta">
     <span class="edit" onclick="startedit(this)">edit</span>
     <span class="delete" data-title='{{ bm.title }}' data-id='{{ bm.id }}' onclick="deletebm(this)">delete</span>
-    <span>added: {{ bm.created | datetime_to_human }}</span>
+    <span>added: {{ bm.created_time | datetime_to_human }}</span>
     <span>id: {{ "%05d" % bm.id }}</span>
   </div>
 </div>

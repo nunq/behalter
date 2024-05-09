@@ -44,7 +44,8 @@ class Bookmark(db.Model):  # pylint: disable=R0903,R0902
     __tablename__ = "bookmark"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    created: Mapped[dt] = mapped_column(default=dt.now(timezone.utc))
+    created_time: Mapped[dt] = mapped_column(default=dt.now(timezone.utc))
+    deleted_time: Mapped[dt] = mapped_column(nullable=True)
     deleted: Mapped[bool] = mapped_column(default=False)
     title: Mapped[str] = mapped_column()
     detail: Mapped[str] = mapped_column()

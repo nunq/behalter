@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """this module does all the db retrieval"""
+from datetime import datetime as dt
+from datetime import timezone
 from re import search
 
 from sqlalchemy import or_
@@ -146,6 +148,7 @@ def mark_bookmark_as_deleted(id_to_delete):
             db.select(Bookmark).filter_by(id=id_to_delete)
         ).scalar_one()
         bm.deleted = True
+        bm.deleted_time = dt.now(timezone.utc)
         db.session.commit()
         return True
     except Exception:  # pylint: disable=W0718
