@@ -37,7 +37,7 @@ def create_bookmark(title, link, detail, note, tags=None):
         link (str): bookmark link
         detail (str): bookmark detail text (auto fetched from html meta description tag)
         note (str): personal note text
-        tags (str, optional): bookmark tags. Defaults to None.
+        tags (str, optional): comma separated string of tags. Defaults to None.
 
     Returns:
         Bookmark: created bookmark element
@@ -86,6 +86,14 @@ def get_tags_ordered_by_usage():
 
 
 def mark_bookmark_as_deleted(id_to_delete):
+    """mark a bookmark as deleted in the database
+
+    Args:
+        id_to_delete (int): id of bookmark
+
+    Returns:
+        bool: successful operation or not
+    """
     try:
         bm = db.session.execute(
             db.select(Bookmark).filter_by(id=id_to_delete)
@@ -98,6 +106,18 @@ def mark_bookmark_as_deleted(id_to_delete):
 
 
 def edit_bookmark(b_id, new_title, new_detail, new_note, new_tags_str):
+    """update all fields for a bookmark in the database
+
+    Args:
+        b_id (int): bookmark id
+        new_title (str): new bookmark title
+        new_detail (str): new bookmark detail text
+        new_note (str): new personal note text
+        new_tags_str (str): new comma separated string of tags
+
+    Returns:
+        (bool, Bookmark|None): bool indicates function success, if True Bookmark is the edited bookmark. If not -> None
+    """
     new_tags = None
     if new_tags_str != "":
         new_tags = {

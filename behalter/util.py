@@ -10,10 +10,12 @@ from behalter import app
 
 @app.template_filter()
 def datetime_to_human(dt):
+    """utility func that converts a python datetime object into dd-mm-YYYY"""
     return dt.strftime("%d-%m-%Y")
 
 
 def fetch_link_info(url):
+    """try to extract title and html meta description from a url"""
     title = ""
     detail = ""
 

@@ -13,12 +13,14 @@ from behalter.util import fetch_link_info
 
 @app.route("/")
 def index():
+    """show all undeleted bookmark on index"""
     bm = database.get_all_bookmarks(include_deleted=False)
     return render_template("index.html", bookmarks=bm)
 
 
 @app.route("/favicon.ico")
 def favicon():
+    """favicon route"""
     return send_from_directory(
         Path(app.root_path) / "static",
         "favicon.ico",
@@ -28,6 +30,7 @@ def favicon():
 
 @app.route("/export")
 def export_bookmarks():
+    """dump all bookmarks, including deleted ones, as json"""
     bm = list(database.get_all_bookmarks(include_deleted=True))
     return jsonify(bm)
 
@@ -37,6 +40,7 @@ def export_bookmarks():
 
 @app.route("/api/bm/add")
 def add_bookmark():
+    """add a new bookmark, return html of newly created bookmark"""
     ra = request.args
     title = ra.get("title")
     link = ra.get("link")
@@ -59,6 +63,7 @@ def add_bookmark():
 
 @app.route("/api/bm/linkinfo")
 def link_info():
+    """fetch html title and detail info for a url"""
     ra = request.args
     link = ra.get("link")
     return fetch_link_info(link)
@@ -66,12 +71,14 @@ def link_info():
 
 @app.route("/api/tags/get")
 def list_tags():
+    """return a list of tags, ordered by usage. used by awesomplete tag input"""
     ret = database.get_tags_ordered_by_usage()
     return jsonify({"result": "success", "tags": ret})
 
 
 @app.route("/api/bm/delete")
 def delete_bookmark():
+    """delete a bookmark from the database"""
     b_id = request.args.get("id")
     success = database.mark_bookmark_as_deleted(b_id)
     if success:
@@ -82,6 +89,7 @@ def delete_bookmark():
 
 @app.route("/api/bm/edit")
 def edit_bookmark():
+    """update all fields for a bookmark. return edited bookmark's html on success."""
     ra = request.args
     b_id = ra.get("id")
     title = ra.get("title")
