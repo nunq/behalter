@@ -4,7 +4,10 @@ from re import search
 
 from sqlalchemy import or_
 
-from behalter.models import Bookmark, Tag, bookmark_tag, db
+from behalter.models import Bookmark
+from behalter.models import bookmark_tag
+from behalter.models import db
+from behalter.models import Tag
 
 
 def get_all_bookmarks(include_deleted=False):

@@ -7,7 +7,8 @@ from flask import render_template
 from flask import request
 from flask import send_from_directory
 
-from behalter import app, database
+from behalter import app
+from behalter import database
 from behalter.util import fetch_link_info
 
 
