@@ -125,7 +125,7 @@ textarea {
   #add-table > div > label {
     text-align: left;
   }
-  h1 {
+  h1, h3 {
     text-align: center;
   }
 }
