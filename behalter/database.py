@@ -210,3 +210,14 @@ def edit_bookmark(b_id, new_title, new_detail, new_note, new_tags_str):
         return True, bm_db
     except Exception:  # pylint: disable=W0718
         return False, None
+
+
+def check_duplicate(link_to_check):
+    dup = db.session.execute(
+        db.select(Bookmark.id).filter(Bookmark.link == link_to_check)
+    ).scalar()
+    if dup:
+        print("is dup!")
+        return True, dup
+    else:
+        return False, None
