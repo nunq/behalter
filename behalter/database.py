@@ -214,11 +214,12 @@ def edit_bookmark(b_id, new_title, new_detail, new_note, new_tags_str):
 
 
 def check_duplicate(link_to_check):
+    """check if link_to_check is already associated with a bookmark in the db"""
     dup = db.session.execute(
         db.select(Bookmark.id).filter(Bookmark.link == link_to_check)
     ).scalar()
     if dup:
         print("is dup!")
         return True, dup
-    else:
-        return False, None
+
+    return False, None
