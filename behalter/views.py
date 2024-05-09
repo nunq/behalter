@@ -72,3 +72,21 @@ def delete_bookmark():
         return jsonify(
             {"result": "error", "res-text": "database mark as deleted failed"}
         )
+
+
+@app.route("/api/bm/edit")
+def edit_bookmark():
+    ra = request.args
+    b_id = ra.get("id")
+    title = ra.get("title")
+    detail = ra.get("detail")
+    note = ra.get("note")
+    tags = ra.get("tags")
+
+    success, ret = database.edit_bookmark(b_id, title, detail, note, tags)
+    if success:
+        return jsonify(
+            {"result": "success", "bmhtml": render_template("bookmark.html", bm=ret)}
+        )
+    # else
+    return jsonify({"result": "error", "res-text": "editing failed"})

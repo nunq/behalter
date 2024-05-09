@@ -95,3 +95,48 @@ def mark_bookmark_as_deleted(id_to_delete):
         return True
     except:
         return False
+
+
+def edit_bookmark(b_id, new_title, new_detail, new_note, new_tags_str):
+    new_tags = None
+    if new_tags_str != "":
+        new_tags = {
+            tag_dirty.strip()
+            for tag_dirty in new_tags_str.split(",")
+            if tag_dirty != ""
+        }
+
+    try:
+        bm_db = db.session.execute(db.select(Bookmark).filter_by(id=b_id)).scalar_one()
+        db_tags = {tag.name for tag in bm_db.tags}
+
+        tags_new = new_tags - db_tags
+        tags_missing = db_tags - new_tags
+
+        # try insert new tags, if they already exist increment usage
+        for tag_name in tags_new:
+            tag = db.session.execute(
+                db.select(Tag).where(Tag.name == tag_name)
+            ).scalar()
+            if not tag:
+                tag = Tag(name=tag_name, usage=0)
+                db.session.add(tag)
+            bm_db.tags.append(tag)
+            tag.usage = len(tag.bookmarks)
+
+        # for every tag thats missing (deleted) decrease usage by one and remove if 0
+        for tag_name in tags_missing:
+            tag = db.session.execute(
+                db.select(Tag).where(Tag.name == tag_name)
+            ).scalar()
+            bm_db.tags.remove(tag)
+            if len(tag.bookmarks) == 0:
+                db.session.delete(tag)
+
+        bm_db.title = new_title
+        bm_db.detail = new_detail
+        bm_db.note = new_note
+        db.session.commit()
+        return True, bm_db
+    except Exception:  # pylint: disable=W0718
+        return False, None
