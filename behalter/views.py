@@ -78,18 +78,18 @@ def add_bookmark():
     is_duplicate, dup_id = database.check_duplicate(link)
     if is_duplicate:
         return jsonify({"result": "duplicate", "href": f"/search?q=dup:{dup_id}"})
-    else:
-        if tags != "":
-            created_bm = database.create_bookmark(title, link, detail, note, tags)
-        else:
-            created_bm = database.create_bookmark(title, link, detail, note)
 
-        return jsonify(
-            {
-                "result": "success",
-                "bmhtml": render_template("bookmark.html", bm=created_bm),
-            }
-        )
+    if tags != "":
+        created_bm = database.create_bookmark(title, link, detail, note, tags)
+    else:
+        created_bm = database.create_bookmark(title, link, detail, note)
+
+    return jsonify(
+        {
+            "result": "success",
+            "bmhtml": render_template("bookmark.html", bm=created_bm),
+        }
+    )
 
 
 @app.route("/api/bm/linkinfo")
