@@ -47,13 +47,19 @@ def search_bookmarks():
 
     if q.startswith("tag:"):
         res = database.search_bookmarks_by_tag(q.removeprefix("tag:"))
+    elif q.startswith("dup:"):
+        # handle duplicate id searches before regular id searches
+        res = database.search_bookmark_by_id(q.removeprefix("dup:"))
+        dup_id = q.removeprefix("dup:")
+        return render_template(
+            "results.html", query=f"duplicate check (id:{dup_id})", results=list(res)
+        )
     elif q.startswith("id:"):
         res = database.search_bookmark_by_id(q.removeprefix("id:"))
     else:
         res = database.search_bookmarks_by_query(q)
 
-    bm = list(res)
-    return render_template("results.html", query=q, results=bm)
+    return render_template("results.html", query=q, results=list(res))
 
 
 # api --------------------
@@ -69,17 +75,21 @@ def add_bookmark():
     note = ra.get("note")
     tags = ra.get("tags")
 
-    if tags != "":
-        created_bm = database.create_bookmark(title, link, detail, note, tags)
+    is_duplicate, dup_id = database.check_duplicate(link)
+    if is_duplicate:
+        return jsonify({"result": "duplicate", "href": f"/search?q=dup:{dup_id}"})
     else:
-        created_bm = database.create_bookmark(title, link, detail, note)
+        if tags != "":
+            created_bm = database.create_bookmark(title, link, detail, note, tags)
+        else:
+            created_bm = database.create_bookmark(title, link, detail, note)
 
-    # TODO handle duplicates
-    # TODO redirect to bookmark if duplicate detected
-    # TODO implement search?id=<id> for that
-    return jsonify(
-        {"result": "success", "bmhtml": render_template("bookmark.html", bm=created_bm)}
-    )
+        return jsonify(
+            {
+                "result": "success",
+                "bmhtml": render_template("bookmark.html", bm=created_bm),
+            }
+        )
 
 
 @app.route("/api/bm/linkinfo")

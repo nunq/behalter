@@ -18,6 +18,8 @@ function checkerror(json) {
 function afteradd(json) {
   if(json["result"] == "error") {
     checkerror(json);
+  } else if (json["result"] == "duplicate") {
+    window.location.href = json["href"];
   } else {
     l.value = "";
     t.value = "";
