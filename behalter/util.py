@@ -11,7 +11,7 @@ from behalter import app
 @app.template_filter()
 def datetime_to_human(dt):
     """utility func that converts a python datetime object into dd-mm-YYYY"""
-    return dt.strftime("%d-%m-%Y")
+    return dt.strftime("%d-%m-%Y %H:%M")
 
 
 def fetch_link_info(url):
