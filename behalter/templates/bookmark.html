@@ -1,5 +1,5 @@
 <div class="item">
-  <a class="link" href='{{ bm["currentlink"] }}'>{{ bm.title }}</a>
+  <a class="link" href='{{ bm.link }}'>{{ bm.title }}</a>
   <span class="detail">{{ bm.detail }}</span>
   <p class="note">{{ bm.note }}</p>
   <div class="tags">
@@ -11,7 +11,7 @@
   </div>
   <div class="meta">
     <span class="edit" onclick="startedit(this)">edit</span>
-    <span class="delete" data-title='{{ bm["title"] }}' data-id='{{ bm["id"] }}' onclick="deletebm(this)">delete</span>
+    <span class="delete" data-title='{{ bm.title }}' data-id='{{ bm.id }}' onclick="deletebm(this)">delete</span>
     <span>added: {{ bm.created | datetime_to_human }}</span>
     <span>id: {{ "%05d" % bm.id }}</span>
   </div>
