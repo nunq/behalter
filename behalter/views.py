@@ -38,31 +38,21 @@ def export_bookmarks():
 # search --------------------
 
 
-@app.route("/searchbytag")
-def search_bookmarks_by_tag():
-    """search bookmarks by tag"""
-    ra = request.args
-    tag = ra.get("q")
-    res = database.search_bookmarks_by_tag(tag)
-    return render_template("index.html", bookmarks=res)
-
-
-@app.route("/searchbyid")
-def search_bookmark_by_id():
-    """search bookmarks by id"""
-    ra = request.args
-    b_id = ra.get("q")
-    res = database.search_bookmark_by_id(b_id)
-    return render_template("index.html", bookmarks=res)
-
-
 @app.route("/search")
-def search_bookmarks_by_query():
-    """search bookmarks by custom query"""
+def search_bookmarks():
+    """search bookmarks by tag, id, or custom user query"""
     ra = request.args
-    query = ra.get("q")
-    res = database.search_bookmarks_by_query(query)
-    return render_template("index.html", bookmarks=res)
+    q = ra.get("q").strip()
+
+    if q.startswith("tag:"):
+        res = database.search_bookmarks_by_tag(q.removeprefix("tag:"))
+        return render_template("index.html", bookmarks=res)
+    elif q.startswith("id:"):
+        res = database.search_bookmark_by_id(q.removeprefix("id:"))
+        return render_template("index.html", bookmarks=res)
+    else:
+        res = database.search_bookmarks_by_query(q)
+        return render_template("index.html", bookmarks=res)
 
 
 # api --------------------

@@ -146,7 +146,7 @@ function startedit(ref) {
 }
 
 function filterbytag(tag) {
-  window.location.href = "/search?tag="+encodeURIComponent(tag.innerText);
+  window.location.href = "/search?q=tag:"+encodeURIComponent(tag.innerText);
 }
 
 function resetfields() {
