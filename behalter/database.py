@@ -29,6 +29,22 @@ def get_all_bookmarks(include_deleted=False):
     return bookmarks
 
 
+def search_bookmarks_by_tag(tag):
+    stmt = (
+        db.select(Bookmark)
+        .join(bookmark_tag, Bookmark.id == bookmark_tag.c.bookmark)
+        .join(Tag, Tag.name == bookmark_tag.c.tag)
+        .filter(
+            Bookmark.deleted == False,  # pylint: disable=C0121
+            Tag.name.like(f"%{tag}%"),
+        )
+        .order_by(Bookmark.id.desc())
+    )
+    bookmarks = db.session.execute(stmt).scalars()
+    return bookmarks
+
+
+
 def create_bookmark(title, link, detail, note, tags=None):
     """creates a bookmark in the database, also sets up new tags
 

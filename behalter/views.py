@@ -35,6 +35,18 @@ def export_bookmarks():
     return jsonify(bm)
 
 
+# search --------------------
+
+
+@app.route("/searchbytag")
+def search_bookmarks_by_tag():
+    ra = request.args
+    tag = ra.get("q")
+    res = database.search_bookmarks_by_tag(tag)
+    return render_template("index.html", bookmarks=res)
+
+
+
 # api --------------------
 
 
