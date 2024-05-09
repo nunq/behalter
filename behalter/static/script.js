@@ -142,9 +142,7 @@ function startedit(ref) {
   var inner = ref.parentElement.parentElement.children[3].innerText;
   ref.parentElement.parentElement.children[3].innerHTML = "<input type='text' onclick='edittagsfetch(this)' value='"+inner.replaceAll(" ", ",")+"'>";
 
-  //ref.parentElement.insertAdjacentHTML("beforebegin", '<label style="font-size: 16px;"><input type="checkbox" id="usearchive">use archive</label>');
   ref.parentElement.parentElement.innerHTML += '<button onclick="sendedit(this)">submit</button>';
-
 }
 
 function filterbytag(tag) {
