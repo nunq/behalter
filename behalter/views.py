@@ -54,7 +54,12 @@ def search_bookmark_by_id():
     return render_template("index.html", bookmarks=res)
 
 
-
+@app.route("/search")
+def search_bookmarks_by_query():
+    ra = request.args
+    query = ra.get("q")
+    res = database.search_bookmarks_by_query(query)
+    return render_template("index.html", bookmarks=res)
 
 
 # api --------------------
