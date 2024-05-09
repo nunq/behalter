@@ -38,7 +38,7 @@ bookmark_tag = Table(
 
 
 @dataclass
-class Bookmark(db.Model):  # pylint: disable=R0903
+class Bookmark(db.Model):  # pylint: disable=R0903,R0902
     """bookmark database model"""
 
     __tablename__ = "bookmark"

@@ -72,15 +72,12 @@ def list_tags():
 
 @app.route("/api/bm/delete")
 def delete_bookmark():
-    id = request.args.get("id")
-    success = database.mark_bookmark_as_deleted(id)
+    b_id = request.args.get("id")
+    success = database.mark_bookmark_as_deleted(b_id)
     if success:
         return jsonify({"result": "success"})
-
-    else:
-        return jsonify(
-            {"result": "error", "res-text": "database mark as deleted failed"}
-        )
+    # else
+    return jsonify({"result": "error", "res-text": "database mark as deleted failed"})
 
 
 @app.route("/api/bm/edit")

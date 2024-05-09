@@ -27,7 +27,7 @@ def fetch_link_info(url):
 
     try:
         res = urllib.request.urlopen(req)
-    except:
+    except Exception:  # pylint: disable=W0718
         return jsonify({"result": "success", "title": title, "detail": detail})
 
     soup = BeautifulSoup(
@@ -36,20 +36,20 @@ def fetch_link_info(url):
 
     try:
         title = soup.title.string.strip()
-    except:
+    except Exception:  # pylint: disable=W0718
         pass
 
-    if soup.find(name="meta", attrs={"name": "description"}) != None:
+    if soup.find(name="meta", attrs={"name": "description"}) is not None:
         detail = soup.find(name="meta", attrs={"name": "description"}).get("content")
 
     if (
-        soup.find(name="meta", attrs={"name": "og:description"}) != None
+        soup.find(name="meta", attrs={"name": "og:description"}) is not None
         and detail == ""
     ):
         detail = soup.find(name="meta", attrs={"name": "og:description"}).get("content")
 
     if (
-        soup.find(name="meta", attrs={"name": "twitter:description"}) != None
+        soup.find(name="meta", attrs={"name": "twitter:description"}) is not None
         and detail == ""
     ):
         detail = soup.find(name="meta", attrs={"name": "twitter:description"}).get(
