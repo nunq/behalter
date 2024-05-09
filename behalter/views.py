@@ -46,13 +46,13 @@ def search_bookmarks():
 
     if q.startswith("tag:"):
         res = database.search_bookmarks_by_tag(q.removeprefix("tag:"))
-        return render_template("index.html", bookmarks=res)
     elif q.startswith("id:"):
         res = database.search_bookmark_by_id(q.removeprefix("id:"))
-        return render_template("index.html", bookmarks=res)
     else:
         res = database.search_bookmarks_by_query(q)
-        return render_template("index.html", bookmarks=res)
+
+    bm = list(res)
+    return render_template("results.html", query=q, results=bm)
 
 
 # api --------------------
