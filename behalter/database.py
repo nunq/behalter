@@ -63,7 +63,7 @@ def create_bookmark(title, link, detail, note, tags=None):
                 tag = Tag(name=tag_name, usage=0)
                 db.session.add(tag)
             bm_tags.append(tag)
-            tag.usage += 1
+            tag.usage = len(tag.bookmarks)
 
     bm = Bookmark(
         title=title, link=link, detail=detail, domain=domain, note=note, tags=bm_tags
