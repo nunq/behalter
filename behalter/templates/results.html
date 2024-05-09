@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>behalter: search</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'awesomplete.css') }}">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body>
+    <h1><a href="/">behalter</a></h1>
+    <br>
+    <details id="add-dialog" open>
+      <summary>add new or search <form action="search"><input type="text" id="search" name="q" placeholder="query" autofocus required></form></summary>
+        <div id="add-table">
+        <div>
+        <label for="new-link">link: </label>
+        <input type="text" id="new-link" name="link" placeholder="source link" onfocusin="resetfields()" onfocusout="getlinkinfo()" required>
+        </div>
+        <div>
+        <label for="new-note">note: </label>
+        <textarea rows="3" id="new-note" name="note" placeholder="add a note"></textarea>
+        </div>
+        <div>
+        <label for="new-title">title: </label>
+        <input type="text" id="new-title" name="title" placeholder="title" required>
+        </div>
+        <div>
+        <label for="new-detail">detail: </label>
+        <textarea rows="2" id="new-detail" name="detail" placeholder="detailed text"></textarea>
+        </div>
+        <div>
+        <label for="new-tags">tags: </label>
+        <input type="text" id="new-tags" name="new-tags" placeholder="tags separated by commas">
+        </div>
+        </div>
+        <br>
+        <button onclick="add()">add bookmark</button>
+    </details>
+    {% if results | length == 1 %}
+      <h3>{{results | length}} result for: {{ query }}</h3>
+    {% else %}
+      <h3>{{results | length}} results for: {{ query }}</h3>
+    {% endif %}
+    <br>
+    <div id="wrapper">
+      {% for res in results %}
+        {% with bm=res %}
+          {% include "bookmark.html" %}
+        {% endwith %}
+      {% endfor %}
+    </div>
+    <script src="{{ url_for('static', filename= 'awesomplete.js') }}"></script>
+    <script src="{{ url_for('static', filename= 'script.js') }}"></script>
+  </body>
+</html>
