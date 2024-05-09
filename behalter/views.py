@@ -40,6 +40,7 @@ def export_bookmarks():
 
 @app.route("/searchbytag")
 def search_bookmarks_by_tag():
+    """search bookmarks by tag"""
     ra = request.args
     tag = ra.get("q")
     res = database.search_bookmarks_by_tag(tag)
@@ -48,6 +49,7 @@ def search_bookmarks_by_tag():
 
 @app.route("/searchbyid")
 def search_bookmark_by_id():
+    """search bookmarks by id"""
     ra = request.args
     b_id = ra.get("q")
     res = database.search_bookmark_by_id(b_id)
@@ -56,6 +58,7 @@ def search_bookmark_by_id():
 
 @app.route("/search")
 def search_bookmarks_by_query():
+    """search bookmarks by custom query"""
     ra = request.args
     query = ra.get("q")
     res = database.search_bookmarks_by_query(query)
