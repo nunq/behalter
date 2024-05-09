@@ -112,7 +112,7 @@ def create_bookmark(title, link, detail, note, tags=None):
                 tag = Tag(name=tag_name, usage=0)
                 db.session.add(tag)
             bm_tags.append(tag)
-            tag.usage = len(tag.bookmarks)
+            tag.usage += 1
 
     bm = Bookmark(
         title=title, link=link, detail=detail, domain=domain, note=note, tags=bm_tags
@@ -192,13 +192,14 @@ def edit_bookmark(b_id, new_title, new_detail, new_note, new_tags_str):
                 tag = Tag(name=tag_name, usage=0)
                 db.session.add(tag)
             bm_db.tags.append(tag)
-            tag.usage = len(tag.bookmarks)
+            tag.usage += 1
 
         # for every tag thats missing (deleted) decrease usage by one and remove if 0
         for tag_name in tags_missing:
             tag = db.session.execute(
                 db.select(Tag).filter(Tag.name == tag_name)
             ).scalar()
+            tag.usage -= 1
             bm_db.tags.remove(tag)
             if len(tag.bookmarks) == 0:
                 db.session.delete(tag)
