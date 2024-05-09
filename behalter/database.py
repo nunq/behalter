@@ -30,6 +30,7 @@ def get_all_bookmarks(include_deleted=False):
 
 
 def search_bookmarks_by_tag(tag):
+    """search bookmarks by tag"""
     stmt = (
         db.select(Bookmark)
         .join(bookmark_tag, Bookmark.id == bookmark_tag.c.bookmark)
@@ -45,6 +46,7 @@ def search_bookmarks_by_tag(tag):
 
 
 def search_bookmark_by_id(b_id):
+    """search a bookmark by id"""
     stmt = db.select(Bookmark).filter(
         Bookmark.deleted == False, Bookmark.id == b_id  # pylint: disable=C0121
     )
@@ -53,6 +55,7 @@ def search_bookmark_by_id(b_id):
 
 
 def search_bookmarks_by_query(query):
+    """search bookmarks by user query in various db fields"""
     stmt = (
         db.select(Bookmark)
         .filter(
