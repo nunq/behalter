@@ -93,7 +93,7 @@ def mark_bookmark_as_deleted(id_to_delete):
         bm.deleted = True
         db.session.commit()
         return True
-    except:
+    except Exception:  # pylint: disable=W0718
         return False
 
 
