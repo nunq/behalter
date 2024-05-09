@@ -26,6 +26,15 @@ def favicon():
     )
 
 
+@app.route("/export")
+def export_bookmarks():
+    bm = list(database.get_all_bookmarks(include_deleted=True))
+    return jsonify(bm)
+
+
+# api --------------------
+
+
 @app.route("/api/bm/add")
 def add_bookmark():
     ra = request.args
