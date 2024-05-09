@@ -52,6 +52,23 @@ def search_bookmark_by_id(b_id):
     return bookmarks
 
 
+def search_bookmarks_by_query(query):
+    stmt = (
+        db.select(Bookmark)
+        .filter(
+            Bookmark.deleted == False,  # pylint: disable=C0121
+            or_(
+                Bookmark.title.like(f"%{query}%"),
+                Bookmark.link.like(f"%{query}%"),
+                Bookmark.detail.like(f"%{query}%"),
+                Bookmark.note.like(f"%{query}%"),
+            ),
+        )
+        .order_by(Bookmark.id.desc())
+    )
+    bookmarks = db.session.scalars(stmt)
+    return bookmarks
+
 
 def create_bookmark(title, link, detail, note, tags=None):
     """creates a bookmark in the database, also sets up new tags
