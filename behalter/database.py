@@ -166,7 +166,8 @@ def edit_bookmark(b_id, new_title, new_detail, new_note, new_tags_str):
         new_tags_str (str): new comma separated string of tags
 
     Returns:
-        (bool, Bookmark|None): bool indicates function success, if True Bookmark is the edited bookmark. If not -> None
+        (bool, Bookmark|None): bool indicates function success,
+        if True Bookmark is the edited bookmark. If not -> None
     """
     new_tags = set()
     if new_tags_str != "":
