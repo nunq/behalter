@@ -27,7 +27,7 @@
     plugins = [ "python3" ];
     instance = {
       type = "normal";
-      pythonPackages = self: with self; [ beautifulsoup4 flask sqlalchemy flask-sqlalchemy tzlocal ];
+      pythonPackages = self: with self; [ beautifulsoup4 flask sqlalchemy flask-sqlalchemy tzlocal user-agent ];
       socket = "127.0.0.1:8081";
       module = "wsgi:app";
       uid = "uwsgi";

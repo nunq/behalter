@@ -5,7 +5,8 @@ import urllib.request
 
 from bs4 import BeautifulSoup
 from flask import jsonify
-import tzlocal
+from tzlocal import get_localzone
+from user_agent import generate_user_agent
 
 from behalter import app
 
@@ -13,7 +14,7 @@ from behalter import app
 @app.template_filter()
 def datetime_to_human(dt):
     """utility func that converts a utc python datetime object into local dd-mm-YYYY"""
-    local_tz = tzlocal.get_localzone()
+    local_tz = get_localzone()
     dt = dt.replace(tzinfo=timezone.utc)
     return dt.astimezone(local_tz).strftime("%d-%m-%Y %H:%M")
 
@@ -23,13 +24,8 @@ def fetch_link_info(url):
     title = ""
     detail = ""
 
-    req = urllib.request.Request(
-        url,
-        data=None,
-        headers={
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:105.0) Gecko/20100101 Firefox/105.0"
-        },
-    )
+    ua = generate_user_agent()
+    req = urllib.request.Request(url, data=None, headers={"User-Agent": ua})
 
     try:
         res = urllib.request.urlopen(req)
