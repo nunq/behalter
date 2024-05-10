@@ -3,7 +3,7 @@
 simple bookmarks management
 
 ## features
-* auto-fetches link and detail for url
+* auto-fetches title and detail for url
 * add personal note to each bookmark
 * tagging, with auto-suggestions
 * search by query
