@@ -28,7 +28,7 @@ def fetch_link_info(url):
     req = urllib.request.Request(url, data=None, headers={"User-Agent": ua})
 
     try:
-        res = urllib.request.urlopen(req)
+        res = urllib.request.urlopen(req)  # pylint: disable=R1732
     except Exception:  # pylint: disable=W0718
         return jsonify({"result": "success", "title": title, "detail": detail})
 
