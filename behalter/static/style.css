@@ -1,4 +1,26 @@
+@font-face {
+  font-family: "Merriweather";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local("Merriweather"), url("/static/font/mwr.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Merriweather";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local("Merriweather Bold"), url("/static/font/mwb.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Merriweather";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local("Merriweather Italic"), url("/static/font/mwi.ttf") format("truetype");
+}
 body {
+  font-family: "Merriweather", serif;
   margin-bottom: 4rem;
   background: #d1a773;
 }
