@@ -16,10 +16,25 @@ simple bookmarks management
 ## setup
 * customize the http basic auth settings in behalter.nix
 * add the contents of behalter.nix to your nix config
-* cp the files to /var/lib/behalter/
+* cp the files in this repo to /var/lib/behalter/
 * chown to uwsgi:uwsgi
 * rebuild nix
 * restart uwsgi
+
+### new behalter migration guide
+the new database structure was introduced in commit 53d9a4b3a8ad875033375b54464c6cccfdfd2bdb.
+
+```sh
+# get you old behalter sqlite db file
+# delete local instance/bm.db file (create a backup if you wanna keep it)
+# run a local dev server with:
+poetry run flask run
+# a new, blank instance/bm.db file will be created
+# run the migration script
+./migration.py --old-file instance/old_behalter_db.db --new-file instance/bm.db
+# then move the new bm.db file to your server
+# install the new version of behalter's code
+```
 
 ## screenshot
 the colorscheme is supposed to resemble a pinboard with post-its.
