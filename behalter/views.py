@@ -77,7 +77,7 @@ def add_bookmark():
 
     is_duplicate, dup_id = database.check_duplicate(link)
     if is_duplicate:
-        return jsonify({"result": "duplicate", "href": f"/search?q=dup:{dup_id}"})
+        return jsonify({"result": "duplicate", "href": f"/search?q=dup:{dup_id}"}), 302
 
     if tags != "":
         created_bm = database.create_bookmark(title, link, detail, note, tags)
