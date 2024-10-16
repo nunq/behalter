@@ -8,6 +8,7 @@ from datetime import timezone
 from typing import List
 
 from flask_sqlalchemy import SQLAlchemy as sa
+from flask_login import UserMixin
 from sqlalchemy import Column
 from sqlalchemy import ForeignKey
 from sqlalchemy import Table
@@ -15,9 +16,13 @@ from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
+from werkzeug.security import generate_password_hash, check_password_hash
 
-from behalter import app
+from behalter import app, login
 
+@login.user_loader
+def load_user(username):
+    return db.session.get(User, str(username))
 
 class Base(DeclarativeBase):  # pylint: disable=R0903
     """sqlalchemy orm base class for declarative mappings"""
@@ -69,6 +74,22 @@ class Tag(db.Model):  # pylint: disable=R0903
         secondary=bookmark_tag, back_populates="tags"
     )
 
+
+@dataclass
+class User(UserMixin, db.Model):
+# pylint: disable=R0903
+    """user database model"""
+
+    __tablename__ = "user"
+    username: Mapped[str] = mapped_column(primary_key=True)
+    password_hash: Mapped[str] = mapped_column()
+    role: Mapped[str] = mapped_column()
+    
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
 # create all models as db tables
 with app.app_context():

@@ -21,11 +21,11 @@
 }
 body {
   font-family: "Merriweather", serif;
-  margin-bottom: 4rem;
+  margin: 2rem auto 4rem auto;
   background: #d1a773;
 }
 h1, h1 > a, h1 > a:visited {
-  margin-bottom: 0;
+  margin: 0;
   color: #261e1e;
   font-family: serif;
   text-decoration: none;
@@ -143,8 +143,14 @@ textarea {
   height: 1.2em;
   vertical-align: top;
 }
+#first {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: auto 0.75em auto 0.75em;
+}
 @media only screen and (min-width: 800px) {
-  #add-dialog {
+  #top-container {
     width: 60%;
     text-align: center;
     margin: auto;

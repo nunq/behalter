@@ -6,13 +6,15 @@ from flask import jsonify
 from flask import render_template
 from flask import request
 from flask import send_from_directory
+from flask import session
 
-from behalter import app
+
+from behalter import app, login
 from behalter import database
 from behalter.util import fetch_link_info
 
-
 @app.route("/")
+#@login_required
 def index():
     """show all undeleted bookmark on index"""
     bm = database.get_all_bookmarks(include_deleted=False)
