@@ -8,6 +8,15 @@
     virtualHosts."behalter.domain.tld" = {
       forceSSL = true;
       enableACME = true;
+      locations."= /<changeme-prefix>/webhook/add" = {
+        extraConfig = ''
+          include ${config.services.nginx.package}/conf/uwsgi_params;
+          uwsgi_pass ${config.services.uwsgi.instance.socket};
+
+          access_log /var/log/nginx/behalter-access.log;
+          error_log  /var/log/nginx/behalter-error.log;
+        '';
+      };
       locations."/" = {
         basicAuth = {
           behalter = lib.removeSuffix "\n" "${builtins.readFile /etc/secrets/basicauth_behalter}";
@@ -26,8 +35,15 @@
     enable = true;
     plugins = [ "python3" ];
     instance = {
+      pythonPackages = self: with self; [
+        beautifulsoup4
+        flask
+        sqlalchemy
+        flask-sqlalchemy
+        pyuseragents
+        tzlocal
+      ];
       type = "normal";
-      pythonPackages = self: with self; [ beautifulsoup4 flask sqlalchemy flask-sqlalchemy tzlocal user-agent ];
       socket = "127.0.0.1:8081";
       module = "wsgi:app";
       uid = "uwsgi";
