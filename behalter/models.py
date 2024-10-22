@@ -49,7 +49,7 @@ class Bookmark(db.Model):  # pylint: disable=R0903,R0902
     deleted: Mapped[bool] = mapped_column(default=False)
     title: Mapped[str] = mapped_column()
     detail: Mapped[str] = mapped_column()
-    link: Mapped[str] = mapped_column(unique=True)
+    link: Mapped[str] = mapped_column()
     domain: Mapped[str] = mapped_column()
     note: Mapped[str] = mapped_column()
     tags: Mapped[List[Tag]] = relationship(
