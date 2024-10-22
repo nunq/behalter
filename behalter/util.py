@@ -19,7 +19,7 @@ def datetime_to_human(dt):
     return dt.astimezone(local_tz).strftime("%d-%m-%Y %H:%M")
 
 
-def fetch_link_info(url):
+def fetch_link_info(url, no_json=False):
     """try to extract title and html meta description from a url"""
     title = ""
     detail = ""
@@ -58,4 +58,7 @@ def fetch_link_info(url):
             "content"
         )
 
-    return jsonify({"result": "success", "title": title, "detail": detail})
+    if no_json:
+        return {"result": "success", "title": title, "detail": detail}
+    else:
+        return jsonify({"result": "success", "title": title, "detail": detail})

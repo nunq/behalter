@@ -153,8 +153,14 @@ def add_bookmark_webhook():
     newest_item = post_body["items"][0]
 
     link = newest_item["canonical"][0]["href"]
-    title = newest_item["title"]
-    detail = newest_item["summary"]["content"]
+    linkinfo = fetch_link_info(link, no_json=True)
+
+    if linkinfo["result"] == "success":
+        title = linkinfo["title"]
+        detail = linkinfo["detail"]
+    else:
+        title = newest_item["title"]
+        detail = newest_item["summary"]["content"]
     tags = "from-inoreader"
     note = ""
 
