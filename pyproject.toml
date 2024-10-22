@@ -15,6 +15,7 @@ pylint = "^3.1.0"
 tzlocal = "^5.2"
 user-agent = "^0.1.10"
 requests = "^2.32.3"
+pyuwsgi = "^2.0.26"
 
 
 [build-system]
