@@ -6,7 +6,7 @@ import urllib.request
 from bs4 import BeautifulSoup
 from flask import jsonify
 from tzlocal import get_localzone
-from user_agent import generate_user_agent
+import pyuseragents
 
 from behalter import app
 
@@ -24,7 +24,7 @@ def fetch_link_info(url):
     title = ""
     detail = ""
 
-    ua = generate_user_agent()
+    ua = pyuseragents.random()
     req = urllib.request.Request(url, data=None, headers={"User-Agent": ua})
 
     try:
