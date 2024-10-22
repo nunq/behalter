@@ -135,3 +135,33 @@ def edit_bookmark():
         )
     # else
     return jsonify({"result": "error", "res-text": "editing failed"})
+
+
+# webhook ----------------
+
+
+@app.route(f"/{app.config['WEBHOOK_PREFIX']}/webhook/add", methods=["POST"])
+def add_bookmark_webhook():
+    """add a new bookmark from inoreader webhook request"""
+    ra = request.args
+    token = ra.get("auth")
+
+    if not token or token != app.config["WEBHOOK_TOKEN"]:
+        return "unauthorized", 401 # http unauthorized
+
+    post_body = request.get_json()
+    newest_item = post_body["items"][0]
+
+    link = newest_item["canonical"][0]["href"]
+    title = newest_item["title"]
+    detail = newest_item["summary"]["content"]
+    tags = "from-inoreader"
+    note = ""
+
+    is_duplicate, dup_id = database.check_duplicate(link)
+    if is_duplicate:
+        return "duplicate detected", 409 # http conflict
+
+    database.create_bookmark(title, link, detail, note, tags)
+
+    return "success", 201
