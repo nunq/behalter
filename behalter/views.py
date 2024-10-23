@@ -164,7 +164,7 @@ def add_bookmark_webhook():
     tags = "from-inoreader"
     note = ""
 
-    is_duplicate, dup_id = database.check_duplicate(link)
+    is_duplicate, dup_id = database.check_duplicate(link) # pylint: disable=unused-variable
     if is_duplicate:
         return "duplicate detected", 409 # http conflict
 
