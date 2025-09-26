@@ -40,21 +40,6 @@ to be placed in `instace/config.json`
 }
 ```
 
-### new behalter migration guide
-the new database structure was introduced in commit 53d9a4b3a8ad875033375b54464c6cccfdfd2bdb.
-
-```sh
-# get your old behalter sqlite db file
-# delete local instance/bm.db file in dev environment (create a backup if you wanna keep it)
-# run a local dev server with:
-poetry run flask run
-# a new, blank instance/bm.db file will be created
-# run the migration script
-./migration.py --old-file instance/old_behalter_db.db --new-file instance/bm.db
-# then move the new bm.db file to your server
-# install the new version of behalter's code
-```
-
 ## screenshot
 the colorscheme is supposed to resemble a pinboard with post-its. (the favicon display feature is missing in the screenshot because it's an old version).
 
