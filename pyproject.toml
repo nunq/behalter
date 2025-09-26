@@ -1,23 +1,25 @@
-[tool.poetry]
+[project]
+name = "behalter"
+version = "0.1.0"
 description = "A simple bookmark manager"
-authors = ["nunq <46054695+nunq@users.noreply.github.com>"]
-license = "MIT"
+authors = [
+    { name = "nunq", email = "46054695+nunq@users.noreply.github.com" }
+]
+license = { text = "MIT" }
 readme = "README.md"
-package-mode = false
+requires-python = ">=3.12"
+dependencies = [
+    "beautifulsoup4>=4.12.3",
+    "flask>=3.0.3",
+    "flask-sqlalchemy>=3.1.1",
+    "sqlalchemy>=2.0.29",
+    "tzlocal>=5.2",
+    "requests>=2.32.3",
+    "pyuwsgi>=2.0.26",
+    "pyuseragents>=1.0.5",
+]
 
-[tool.poetry.dependencies]
-python = "^3.12"
-beautifulsoup4 = "^4.12.3"
-flask = "^3.0.3"
-flask-sqlalchemy = "^3.1.1"
-sqlalchemy = "^2.0.29"
-pylint = "^3.1.0"
-tzlocal = "^5.2"
-requests = "^2.32.3"
-pyuwsgi = "^2.0.26"
-pyuseragents = "^1.0.5"
-
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[dependency-groups]
+dev = [
+    "pylint>=3.1.0",
+]
