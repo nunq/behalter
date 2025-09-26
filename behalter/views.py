@@ -36,9 +36,7 @@ def export_bookmarks():
     return jsonify(bm)
 
 
-# search --------------------
-
-
+# search
 @app.route("/search")
 def search_bookmarks():
     """search bookmarks by tag, id, or custom user query"""
@@ -62,22 +60,27 @@ def search_bookmarks():
     return render_template("results.html", query=q, results=list(res))
 
 
-# api --------------------
+# api
+@app.route("/api/bookmarks", methods=["GET"])
+def get_bookmarks():
+    """get all undeleted bookmarks"""
+    bm = database.get_all_bookmarks(include_deleted=False)
+    return jsonify({"result": "success", "bookmarks": list(bm)})
 
 
-@app.route("/api/bm/add")
-def add_bookmark():
-    """add a new bookmark, return html of newly created bookmark"""
-    ra = request.args
-    title = ra.get("title")
-    link = ra.get("link")
-    detail = ra.get("detail")
-    note = ra.get("note")
-    tags = ra.get("tags")
+@app.route("/api/bookmarks", methods=["POST"])
+def create_bookmark():
+    """create a new bookmark, return html of newly created bookmark"""
+    data = request.get_json()
+    title = data.get("title")
+    link = data.get("link")
+    detail = data.get("detail")
+    note = data.get("note")
+    tags = data.get("tags", "")
 
     is_duplicate, dup_id = database.check_duplicate(link)
     if is_duplicate:
-        return jsonify({"result": "duplicate", "href": f"/search?q=dup:{dup_id}"}), 302
+        return jsonify({"result": "duplicate", "href": f"/search?q=dup:{dup_id}"}), 409
 
     if tags != "":
         created_bm = database.create_bookmark(title, link, detail, note, tags)
@@ -89,10 +92,36 @@ def add_bookmark():
             "result": "success",
             "bmhtml": render_template("bookmark.html", bm=created_bm),
         }
-    )
+    ), 201
 
 
-@app.route("/api/bm/linkinfo")
+@app.route("/api/bookmarks/<int:bookmark_id>", methods=["PUT"])
+def update_bookmark(bookmark_id):
+    """update all fields for a bookmark. return edited bookmark's html on success."""
+    data = request.get_json()
+    title = data.get("title")
+    detail = data.get("detail")
+    note = data.get("note")
+    tags = data.get("tags")
+
+    success, ret = database.edit_bookmark(bookmark_id, title, detail, note, tags)
+    if success:
+        return jsonify(
+            {"result": "success", "bmhtml": render_template("bookmark.html", bm=ret)}
+        )
+    return jsonify({"result": "error", "res-text": "editing failed"}), 400
+
+
+@app.route("/api/bookmarks/<int:bookmark_id>", methods=["DELETE"])
+def delete_bookmark(bookmark_id):
+    """delete a bookmark from the database"""
+    success = database.mark_bookmark_as_deleted(bookmark_id)
+    if success:
+        return jsonify({"result": "success"})
+    return jsonify({"result": "error", "res-text": "database mark as deleted failed"}), 400
+
+
+@app.route("/api/linkinfo")
 def link_info():
     """fetch html title and detail info for a url"""
     ra = request.args
@@ -100,46 +129,14 @@ def link_info():
     return fetch_link_info(link)
 
 
-@app.route("/api/tags/get")
+@app.route("/api/tags")
 def list_tags():
     """return a list of tags, ordered by usage. used by awesomplete tag input"""
     ret = database.get_tags_ordered_by_usage()
     return jsonify({"result": "success", "tags": ret})
 
 
-@app.route("/api/bm/delete")
-def delete_bookmark():
-    """delete a bookmark from the database"""
-    b_id = request.args.get("id")
-    success = database.mark_bookmark_as_deleted(b_id)
-    if success:
-        return jsonify({"result": "success"})
-    # else
-    return jsonify({"result": "error", "res-text": "database mark as deleted failed"})
-
-
-@app.route("/api/bm/edit")
-def edit_bookmark():
-    """update all fields for a bookmark. return edited bookmark's html on success."""
-    ra = request.args
-    b_id = ra.get("id")
-    title = ra.get("title")
-    detail = ra.get("detail")
-    note = ra.get("note")
-    tags = ra.get("tags")
-
-    success, ret = database.edit_bookmark(b_id, title, detail, note, tags)
-    if success:
-        return jsonify(
-            {"result": "success", "bmhtml": render_template("bookmark.html", bm=ret)}
-        )
-    # else
-    return jsonify({"result": "error", "res-text": "editing failed"})
-
-
-# webhook ----------------
-
-
+# webhook
 @app.route(f"/{app.config['WEBHOOK_PREFIX']}/webhook/add", methods=["POST"])
 def add_bookmark_webhook():
     """add a new bookmark from inoreader webhook request"""
@@ -161,7 +158,7 @@ def add_bookmark_webhook():
     else:
         title = newest_item["title"]
         detail = newest_item["summary"]["content"]
-    tags = "from-inoreader"
+    tags = "from-webhook"
     note = ""
 
     is_duplicate, dup_id = database.check_duplicate(link) # pylint: disable=unused-variable

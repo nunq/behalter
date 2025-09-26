@@ -39,7 +39,21 @@ function add() {
     return;
   }
 
-  fetch("/api/bm/add?link="+encodeURIComponent(l.value)+"&note="+encodeURIComponent(n.value)+"&tags="+encodeURIComponent(ta.value.replace(/, *$/, ""))+"&detail="+encodeURIComponent(d.value)+"&title="+encodeURIComponent(t.value))
+  const bookmarkData = {
+    link: l.value,
+    title: t.value,
+    detail: d.value,
+    note: n.value,
+    tags: ta.value.replace(/, *$/, "")
+  };
+
+  fetch("/api/bookmarks", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(bookmarkData)
+  })
     .then((response) => response.json())
     .then((data) => afteradd(data));
 }
@@ -54,7 +68,9 @@ function afterdel(json, ref) {
 
 function deletebm(ref) {
   if(confirm('really delete "'+ref.dataset.title+'" ?')) {
-    fetch("/api/bm/delete?id="+ref.dataset.id)
+    fetch("/api/bookmarks/" + ref.dataset.id, {
+      method: "DELETE"
+    })
       .then((response) => response.json())
       .then((data) => afterdel(data, ref));
   }
@@ -87,7 +103,7 @@ function edittagsfetch(ref) {
   if(ref.parentElement.classList.contains("awesomplete")) {
     return;
   }
-  fetch("/api/tags/get")
+  fetch("/api/tags")
     .then((response) => response.json())
     .then((data) => edittags(data, ref));
 }
@@ -120,7 +136,20 @@ function sendedit(ref) {
     return;
   }
 
-  fetch("/api/bm/edit?id="+encodeURIComponent(bm_id)+"&note="+encodeURIComponent(e_note)+"&tags="+encodeURIComponent(e_tags)+"&detail="+encodeURIComponent(e_detail)+"&title="+encodeURIComponent(e_title))
+  const updateData = {
+    title: e_title,
+    detail: e_detail,
+    note: e_note,
+    tags: e_tags
+  };
+
+  fetch("/api/bookmarks/" + bm_id, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(updateData)
+  })
     .then((response) => response.json())
     .then((data) => afteredit(data, ref));
 }
@@ -182,7 +211,7 @@ function getlinkinfo() {
   t.placeholder = "fetching title...";
   d.placeholder = "fetching detail...";
 
-  fetch("/api/bm/linkinfo?link="+encodeURIComponent(l.value))
+  fetch("/api/linkinfo?link="+encodeURIComponent(l.value))
     .then((response) => response.json())
     .then((data) => setlinkinfo(data));
 }
